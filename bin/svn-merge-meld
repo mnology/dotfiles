@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+# svn merge-tool python wrapper for meld
+#
+# This tool must be set as merge-tool-cmd variable in ~/.subversion/config
+# svn would invoke it when user choses the option 'l': external merge tool
+# from their 'resolve conflict' menu
+
+import sys
+import os.path
+import subprocess
+import shutil
+
+# Path to meld
+MELD_PATH = "meld"
+
+if __name__ == "__main__":
+
+    base, theirs, mine, merged = sys.argv[1:5]
+    timestamp = os.path.getmtime(mine)
+
+    try:
+        subprocess.check_call([MELD_PATH, base, mine, theirs])
+    except:
+        print("An error occurred in meld merge helper: %s %s" %
+              sys.exc_info()[0], sys.exc_info()[1])
+        sys.exit(-1)
+
+    # Copy our merge result over the subversion-merged version if we
+    # changed the file; if not then assume that the merge failed.
+    if os.path.getmtime(mine) != timestamp:
+        shutil.copy(mine, merged)
+    else:
+        sys.exit(-2)
+

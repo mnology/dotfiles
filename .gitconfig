@@ -1,0 +1,42 @@
+[gui]
+	fontui = -family \"Anonymous Pro Minus\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
+	fontdiff = -family \"Anonymous Pro Minus\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
+	recentrepo = /media/28b8132d-9b31-4f94-89c2-0c187c6e9081/devel/studio_api
+[user]
+	email =
+	name =
+[alias]
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+[color]
+	ui = true
+[diff]
+	tool = meld
+[branch]
+	autosetupmerge = true
+[push]
+	default = simple
+[core]
+	packedGitWindowSize = 16m
+	packedGitLimit = 128m
+[pack]
+  windowMemory = 512m
+[difftool]
+  prompt = false
+[difftool "meld"]
+  trustExitCode = true
+  cmd = open -W -a Meld --args \"$LOCAL\" \"$PWD/$REMOTE\"
+[alias]
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	co = checkout
+	st = status
+	gui = !sh -c /usr/local/Cellar/git/2.8.3/libexec/git-core/git-gui
+[core]
+  excludesfile = /Users/**USERNAME**/.gitignore_global
+[merge]
+  tool=meld
+[mergetool]
+  prompt = false
+[mergetool "meld"]
+  trustExitCode = true
+  cmd = open -W -a Meld --args --auto-merge \"$PWD/$LOCAL\" \"$PWD/$BASE\" \"$PWD/$REMOTE\" --output=\"$PWD/$MERGED\"

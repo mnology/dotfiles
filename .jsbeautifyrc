@@ -1,0 +1,9 @@
+{
+  "indent_size": 2,
+  "indent_char": " ",
+  "preserve_newlines": false,
+  "jslint_happy": true,
+  "wrap_line_length": 100,
+  "break_chained_methods": true,
+  "good_stuff": true
+}

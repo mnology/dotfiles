@@ -1,0 +1,4 @@
+bind status a !git commit --amend -v
+
+bind branch n !git branch %(prompt)
+bind branch d !?git branch -d %(branch)

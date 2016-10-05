@@ -1,0 +1,11 @@
+#!//usr/bin/env bash
+
+git_pull_org () {
+  local dir=${1}
+  cd ${dir}
+
+  find . -name .git -type d \
+    | xargs -n1 -P4 -I% git --git-dir=% --work-tree=%/.. remote update -p
+
+  cd -
+}

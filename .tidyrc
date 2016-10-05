@@ -1,0 +1,7 @@
+indent: yes
+indent-spaces: 2
+tidy-mark: no
+wrap: 100
+wrap-attributes: no
+wrap-script-literals: no
+quiet: yes
