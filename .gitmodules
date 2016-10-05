@@ -1,3 +1,15 @@
 [submodule "prezto"]
 	path = prezto
 	url = git@github.com:mnology/prezto.git
+[submodule "powerline_fonts"]
+	path = powerline_fonts
+	url = git@github.com:powerline/fonts.git
+[submodule "mintty-color-schemes"]
+	path = mintty-color-schemes
+	url = git@github.com:oumu/mintty-color-schemes.git
+[submodule "iTerm2-Color-Schemes"]
+	path = iTerm2-Color-Schemes
+	url = git@github.com:mbadolato/iTerm2-Color-Schemes.git
+[submodule ".xresources.d/base16-xresources"]
+	path = .xresources.d/base16-xresources
+	url = git@github.com:chriskempson/base16-xresources.git
