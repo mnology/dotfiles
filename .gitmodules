@@ -13,3 +13,6 @@
 [submodule ".xresources.d/base16-xresources"]
 	path = .xresources.d/base16-xresources
 	url = git@github.com:chriskempson/base16-xresources.git
+[submodule ".vim/bundle/Vundle.vim"]
+	path = .vim/bundle/Vundle.vim
+	url = git@github.com:VundleVim/Vundle.vim.git
