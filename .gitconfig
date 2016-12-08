@@ -1,10 +1,9 @@
 [gui]
 	fontui = -family \"Anonymous Pro Minus\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
-	fontdiff = -family \"Anonymous Pro Minus\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
-	recentrepo = /media/28b8132d-9b31-4f94-89c2-0c187c6e9081/devel/studio_api
+	fontdiff = -family \"Source Code Pro for Powerline\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
 [user]
-	email =
-	name =
+	email = ejohanse@jaguarlandrover.com
+	name = Erik Johansen
 [alias]
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
 [color]
@@ -22,9 +21,6 @@
   windowMemory = 512m
 [difftool]
   prompt = false
-[difftool "meld"]
-  trustExitCode = true
-  cmd = open -W -a Meld --args \"$LOCAL\" \"$PWD/$REMOTE\"
 [alias]
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
@@ -37,6 +33,3 @@
   tool=meld
 [mergetool]
   prompt = false
-[mergetool "meld"]
-  trustExitCode = true
-  cmd = open -W -a Meld --args --auto-merge \"$PWD/$LOCAL\" \"$PWD/$BASE\" \"$PWD/$REMOTE\" --output=\"$PWD/$MERGED\"

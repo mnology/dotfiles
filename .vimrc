@@ -41,8 +41,6 @@ Plugin 'xolox/vim-session'
 
 call vundle#end()
 
-source ~/.vim/syntax/netscreen.vim
-
 autocmd filetype css setlocal equalprg=csstidy\ -\ --silent=true\ \--template=low
 
 filetype indent on
@@ -81,7 +79,7 @@ set  listchars=tab:>.,eol:\$
 set  visualbell
 set  wildignore=*.bak,*.o,*.e,*~
 set  wildmenu
-set  guifont=Sauce\ Code\ Powerline:h11
+set  guifont=Source\ Code\ Pro\ for\ Powerline\ 10 
 set  anti enc=utf-8
 let  g:airline_powerline_fonts=1
 
@@ -125,7 +123,6 @@ autocmd FileType ruby,eruby set filetype=ruby.eruby.chef
 
 " ruby / chef syntax checking
 let g:syntastic_ruby_checkers = [ 'rubocop', 'mri' ]
-
 
 " python / pymode
 let g:pymode = 1

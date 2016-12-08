@@ -13,16 +13,18 @@ URxvt*loginShell:      true
 URxvt.depth:           32
 !URxvt.shading:         75
 URxvt.termName:        rxvt-256color 
-URxvt*font:            xft:Source Code Pro-9:style=Regular
-URxvt*boldFont:        xft:Source Code Pro-9:style=Bold
-URxvt*italicFont:      xft:Source Code Pro-9:style=Italic
-URxvt*boldItalicFont:  xft:Source Code Pro-9:style=Bold Italic
+URxvt*font:            xft:Source Code Pro for Powerline-10:style=Regular
+URxvt*boldFont:        xft:Source Code Pro for Powerline-10:style=Bold
+URxvt*italicFont:      xft:Source Code Pro for Powerline-10:style=Italic
+URxvt*boldItalicFont:  xft:Source Code Pro for Powerline-10:style=Bold Italic
 URxvt*cursorColor:     #4E7CDE
 URxvt*cursorBlink:     true
 
-yeahconsole*toggleKey:       None+F12
-yeahconsole*term:            urxvtc
-yeahconsole*inheritPixmap:   false
-yeahconsole*restart:         1
-yeahconsole*consoleHeight:   33
-!yeahconsole*xOffset:        0
+yeahconsole*toggleKey:     None+F12
+yeahconsole*term:          urxvtc
+yeahconsole*inheritPixmap: false
+yeahconsole*restart:       1
+yeahconsole*consoleHeight: 50
+yeahconsole*screenWidth:   1920
+yeahconsole*xOffset:       1920
+yeahconsole*stepSize:      0
