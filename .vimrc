@@ -1,50 +1,55 @@
 " Bundles
+set nocompatible
+filetype off
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
 
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'Chiel92/vim-autoformat'
-Plugin 'ajh17/Spacegray.vim'
-Plugin 'Valloric/YouCompleteMe'
 Plugin 'bash-support.vim'
-Plugin 'bling/vim-airline'
-Plugin 'chriskempson/base16-vim'
-Plugin 'chriskempson/vim-tomorrow-theme'
-Plugin 'dougireton/vim-chef'
-Plugin 'epmatsw/ag.vim'
 Plugin 'groovy.vim'
-Plugin 'hhff/SpacegrayEighties.vim'
-Plugin 'juneedahamed/svnj.vim'
-Plugin 'klen/python-mode'
-Plugin 'maksimr/vim-jsbeautify'
-Plugin 'markcornick/vim-vagrant'
 Plugin 'minibufexplorerpp'
-Plugin 'nanotech/jellybeans.vim'
-Plugin 'ngmy/vim-rubocop'
-Plugin 'nyarly/cadre'
-Plugin 'pangloss/vim-javascript'
 Plugin 'perl-support.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'stephpy/vim-php-cs-fixer'
 Plugin 'taglist-plus'
-Plugin 'taiansu/nerdtree-ag'
-Plugin 'tfnico/vim-gradle'
-Plugin 'tomasr/molokai'
-Plugin 'tpope/vim-fugitive'
 Plugin 'vcscommand.vim'
-Plugin 'vim-perl/vim-perl'
-Plugin 'vim-ruby/vim-ruby'
+Plugin 'epmatsw/ag.vim'
+Plugin 'pearofducks/ansible-vim'
+Plugin 'chriskempson/base16-vim'
+Plugin 'nyarly/cadre'
+Plugin 'nanotech/jellybeans.vim'
 Plugin 'wookiehangover/jshint.vim'
+Plugin 'tomasr/molokai'
+Plugin 'scrooloose/nerdtree'
+Plugin 'taiansu/nerdtree-ag'
+Plugin 'klen/python-mode'
+Plugin 'hhff/SpacegrayEighties.vim'
+Plugin 'ajh17/Spacegray.vim'
+Plugin 'juneedahamed/svnj.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'bling/vim-airline'
+Plugin 'Chiel92/vim-autoformat'
+Plugin 'dougireton/vim-chef'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tfnico/vim-gradle'
+Plugin 'pangloss/vim-javascript'
+Plugin 'lepture/vim-jinja'
+Plugin 'maksimr/vim-jsbeautify'
 Plugin 'xolox/vim-misc'
+Plugin 'vim-perl/vim-perl'
+Plugin 'robbles/logstash.vim'
+Plugin 'stephpy/vim-php-cs-fixer'
+Plugin 'ngmy/vim-rubocop'
+Plugin 'vim-ruby/vim-ruby'
 Plugin 'xolox/vim-session'
+Plugin 'hashivim/vim-terraform'
+Plugin 'chriskempson/vim-tomorrow-theme'
+Plugin 'markcornick/vim-vagrant'
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'Valloric/YouCompleteMe'
 
 call vundle#end()
 
-autocmd filetype css setlocal equalprg=csstidy\ -\ --silent=true\ \--template=low
+filetype plugin indent on
 
-filetype indent on
-filetype plugin on
+autocmd filetype css setlocal equalprg=csstidy\ -\ --silent=true\ \--template=low
 
 colorscheme Tomorrow-Night-Eighties
 syntax on
@@ -81,8 +86,8 @@ set  wildignore=*.bak,*.o,*.e,*~
 set  wildmenu
 set  guifont=Source\ Code\ Pro\ for\ Powerline\ 10 
 set  anti enc=utf-8
-let  g:airline_powerline_fonts=1
 
+let  g:airline_powerline_fonts=1
 
 let javaScript_fold=1
 let perl_fold=1
@@ -135,3 +140,7 @@ let g:pymode_lint_checkers = ['pep8', 'flake8']
 
 " NERDTree
 let NERDTreeShowHidden=1
+
+" Terraform
+let g:terraform_align = 1
+let g:terraform_fmt_on_save = 1
