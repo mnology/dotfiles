@@ -28,6 +28,7 @@ Plugin 'bling/vim-airline'
 Plugin 'Chiel92/vim-autoformat'
 Plugin 'dougireton/vim-chef'
 Plugin 'tpope/vim-fugitive'
+Plugin 'fatih/vim-go'
 Plugin 'tfnico/vim-gradle'
 Plugin 'pangloss/vim-javascript'
 Plugin 'lepture/vim-jinja'
@@ -84,7 +85,7 @@ set  listchars=tab:>.,eol:\$
 set  visualbell
 set  wildignore=*.bak,*.o,*.e,*~
 set  wildmenu
-set  guifont=Source\ Code\ Pro\ for\ Powerline\ 10 
+set  guifont=Input\ Mono\ 10
 set  anti enc=utf-8
 
 let  g:airline_powerline_fonts=1
@@ -144,3 +145,8 @@ let NERDTreeShowHidden=1
 " Terraform
 let g:terraform_align = 1
 let g:terraform_fmt_on_save = 1
+
+" Ansible
+let g:ansible_unindent_after_newline = 1
+let g:ansible_name_highlight = 'd'
+let g:ansible_extra_keywords_highlight = 1

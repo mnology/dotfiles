@@ -1,6 +1,6 @@
 [gui]
 	fontui = -family \"Anonymous Pro Minus\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
-	fontdiff = -family \"Source Code Pro for Powerline\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
+	fontdiff = -family \"Input Mono\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
 [user]
 	email = ejohanse@jaguarlandrover.com
 	name = Erik Johansen

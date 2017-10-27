@@ -13,10 +13,10 @@ URxvt*loginShell:      true
 URxvt.depth:           32
 !URxvt.shading:         75
 URxvt.termName:        rxvt-256color 
-URxvt*font:            xft:Source Code Pro for Powerline-10:style=Regular
-URxvt*boldFont:        xft:Source Code Pro for Powerline-10:style=Bold
-URxvt*italicFont:      xft:Source Code Pro for Powerline-10:style=Italic
-URxvt*boldItalicFont:  xft:Source Code Pro for Powerline-10:style=Bold Italic
+URxvt*font:            xft:Input Mono-10:style=Regular
+URxvt*boldFont:        xft:Input Mono-10:style=Bold
+URxvt*italicFont:      xft:Input Mono-10:style=Italic
+URxvt*boldItalicFont:  xft:Input Mono-10:style=Bold Italic
 URxvt*cursorColor:     #4E7CDE
 URxvt*cursorBlink:     true
 
