@@ -2,6 +2,7 @@
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim/
+set rtp+=/usr/local/lib/python2.7/dist-packages/powerline/bindings/vim/
 call vundle#begin()
 
 Plugin 'bash-support.vim'
@@ -19,7 +20,7 @@ Plugin 'wookiehangover/jshint.vim'
 Plugin 'tomasr/molokai'
 Plugin 'scrooloose/nerdtree'
 Plugin 'taiansu/nerdtree-ag'
-Plugin 'klen/python-mode'
+Plugin 'python-mode/python-mode'
 Plugin 'hhff/SpacegrayEighties.vim'
 Plugin 'ajh17/Spacegray.vim'
 Plugin 'juneedahamed/svnj.vim'
@@ -38,6 +39,7 @@ Plugin 'vim-perl/vim-perl'
 Plugin 'robbles/logstash.vim'
 Plugin 'stephpy/vim-php-cs-fixer'
 Plugin 'ngmy/vim-rubocop'
+" Plugin '42wim/vim-shfmt'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'xolox/vim-session'
 Plugin 'hashivim/vim-terraform'
@@ -69,6 +71,7 @@ set  foldlevelstart=2
 set  helplang=En
 set  hlsearch
 set  incsearch
+set  laststatus=2
 set  matchpairs=(:),{:},[:],<:>
 set  mouse=a
 set  nu
@@ -79,13 +82,14 @@ set  shiftround
 set  shiftwidth=2
 set  showmatch
 set  smartindent
+set  t_CO=256
 set  tabstop=2
 set  textwidth=80
 set  listchars=tab:>.,eol:\$
 set  visualbell
 set  wildignore=*.bak,*.o,*.e,*~
 set  wildmenu
-set  guifont=Input\ Mono\ 10
+set  guifont=Source\ Code\ Pro\ for\ Powerline\ 9
 set  anti enc=utf-8
 
 let  g:airline_powerline_fonts=1
@@ -132,12 +136,13 @@ let g:syntastic_ruby_checkers = [ 'rubocop', 'mri' ]
 
 " python / pymode
 let g:pymode = 1
+let g:pymode_python = 'python3'
 let g:pymode_trim_whitespaces = 1
 let g:pymode_options = 1
 let g:pymode_indent = 1
 let g:pymode_lint = 1
 let g:pymode_lint_on_write = 1
-let g:pymode_lint_checkers = ['pep8', 'flake8']
+let g:pymode_lint_checkers = ['pycodestyle', 'flake8']
 
 " NERDTree
 let NERDTreeShowHidden=1

@@ -1,6 +1,6 @@
 [gui]
-	fontui = -family \"Anonymous Pro Minus\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
-	fontdiff = -family \"Input Mono\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
+	fontui = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
+	fontdiff = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
 [user]
 	email = ejohanse@jaguarlandrover.com
 	name = Erik Johansen
@@ -12,6 +12,7 @@
 	tool = meld
 [branch]
 	autosetupmerge = true
+	autoSetupRebase = remote
 [push]
 	default = simple
 [core]
@@ -33,3 +34,5 @@
   tool=meld
 [mergetool]
   prompt = false
+[pull]
+	rebase = true
