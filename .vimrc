@@ -5,49 +5,61 @@ set rtp+=~/.vim/bundle/Vundle.vim/
 set rtp+=/usr/local/lib/python2.7/dist-packages/powerline/bindings/vim/
 call vundle#begin()
 
-Plugin 'bash-support.vim'
-Plugin 'groovy.vim'
-Plugin 'minibufexplorerpp'
-Plugin 'perl-support.vim'
-Plugin 'taglist-plus'
-Plugin 'vcscommand.vim'
-Plugin 'epmatsw/ag.vim'
-Plugin 'pearofducks/ansible-vim'
-Plugin 'chriskempson/base16-vim'
-Plugin 'nyarly/cadre'
-Plugin 'nanotech/jellybeans.vim'
-Plugin 'wookiehangover/jshint.vim'
-Plugin 'tomasr/molokai'
-Plugin 'scrooloose/nerdtree'
-Plugin 'taiansu/nerdtree-ag'
-Plugin 'python-mode/python-mode'
-Plugin 'hhff/SpacegrayEighties.vim'
-Plugin 'ajh17/Spacegray.vim'
-Plugin 'juneedahamed/svnj.vim'
-Plugin 'scrooloose/syntastic'
-Plugin 'bling/vim-airline'
-Plugin 'Chiel92/vim-autoformat'
-Plugin 'dougireton/vim-chef'
-Plugin 'tpope/vim-fugitive'
-Plugin 'fatih/vim-go'
-Plugin 'tfnico/vim-gradle'
-Plugin 'pangloss/vim-javascript'
-Plugin 'lepture/vim-jinja'
-Plugin 'maksimr/vim-jsbeautify'
-Plugin 'xolox/vim-misc'
-Plugin 'vim-perl/vim-perl'
-Plugin 'robbles/logstash.vim'
-Plugin 'stephpy/vim-php-cs-fixer'
-Plugin 'ngmy/vim-rubocop'
 " Plugin '42wim/vim-shfmt'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'xolox/vim-session'
-Plugin 'hashivim/vim-terraform'
+Plugin 'ajh17/Spacegray.vim'
+Plugin 'bash-support.vim'
+Plugin 'benmills/vimux'
+Plugin 'bling/vim-airline'
+Plugin 'bling/vim-bufferline'
+Plugin 'Chiel92/vim-autoformat'
+Plugin 'chriskempson/base16-vim'
 Plugin 'chriskempson/vim-tomorrow-theme'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'dougireton/vim-chef'
+Plugin 'DoxygenToolkit.vim'
+Plugin 'epmatsw/ag.vim'
+Plugin 'euclio/vim-markdown-composer'
+Plugin 'fatih/vim-go'
+Plugin 'godlygeek/tabular'
+Plugin 'groovy.vim'
+Plugin 'hashivim/vim-terraform'
+Plugin 'hhff/SpacegrayEighties.vim'
+Plugin 'juliosueiras/vim-terraform-completion'
+Plugin 'juneedahamed/svnj.vim'
+Plugin 'lepture/vim-jinja'
+Plugin 'majutsushi/tagbar'
+Plugin 'maksimr/vim-jsbeautify'
 Plugin 'markcornick/vim-vagrant'
-Plugin 'VundleVim/Vundle.vim'
+Plugin 'nanotech/jellybeans.vim'
+Plugin 'ngmy/vim-rubocop'
+Plugin 'nyarly/cadre'
+Plugin 'pangloss/vim-javascript'
+Plugin 'pearofducks/ansible-vim'
+Plugin 'perl-support.vim'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'pseewald/vim-anyfold'
+Plugin 'python-mode/python-mode'
+Plugin 'robbles/logstash.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/syntastic'
+Plugin 'shumphrey/fugitive-gitlab.vim'
+Plugin 'stephpy/vim-php-cs-fixer'
+Plugin 'taglist-plus'
+Plugin 'taiansu/nerdtree-ag'
+Plugin 'tell-k/vim-autopep8'
+Plugin 'tfnico/vim-gradle'
+Plugin 'tomasr/molokai'
+Plugin 'tpope/vim-fugitive'
 Plugin 'Valloric/YouCompleteMe'
-
+Plugin 'vcscommand.vim'
+Plugin 'vim-perl/vim-perl'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'w0rp/ale'
+Plugin 'wookiehangover/jshint.vim'
+Plugin 'xolox/vim-easytags'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-session'
 call vundle#end()
 
 filetype plugin indent on
@@ -67,7 +79,7 @@ set  colorcolumn=+1
 set  expandtab
 set  foldmethod=syntax
 set  foldcolumn=3
-set  foldlevelstart=2
+set  foldlevelstart=0
 set  helplang=En
 set  hlsearch
 set  incsearch
@@ -92,7 +104,9 @@ set  wildmenu
 set  guifont=Source\ Code\ Pro\ for\ Powerline\ 9
 set  anti enc=utf-8
 
-let  g:airline_powerline_fonts=1
+" airline
+let g:airline_powerline_fonts=1
+let g:airline#extensions#tabline#enabled = 1
 
 let javaScript_fold=1
 let perl_fold=1
@@ -155,3 +169,34 @@ let g:terraform_fmt_on_save = 1
 let g:ansible_unindent_after_newline = 1
 let g:ansible_name_highlight = 'd'
 let g:ansible_extra_keywords_highlight = 1
+
+" AnyFold
+autocmd Filetype * AnyFoldActivate
+
+" Tagbar Makefiles
+let g:tagbar_type_make = { 'kinds':[ 'm:macros', 't:targets' ] }
+
+" Add support for markdown files in tagbar.
+let g:tagbar_type_markdown = {
+    \ 'ctagstype': 'markdown',
+    \ 'ctagsbin' : '/usr/local/lib/python3.6/dist-packages/markdown2ctags.py',
+    \ 'ctagsargs' : '-f - --sort=yes --sro=»',
+    \ 'kinds' : [
+        \ 's:sections',
+        \ 'i:images'
+    \ ],
+    \ 'sro' : '»',
+    \ 'kind2scope' : {
+        \ 's' : 'section',
+    \ },
+    \ 'sort': 0,
+\ }
+
+" Gitlab fugitive
+let g:fugitive_gitlab_domains = ['https://git.sdo.jlrmotor.com']
+let g:gitlab_api_keys = { 'git.sdo.jlrmotor.com': '2qt9kMoBGcsaNexwdtoL' }
+
+" Vim startup plugins
+autocmd VimEnter * NERDTree
+autocmd VimEnter * Tagbar
+autocmd VimEnter * wincmd p
