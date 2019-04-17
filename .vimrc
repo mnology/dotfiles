@@ -18,7 +18,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'dougireton/vim-chef'
 Plugin 'DoxygenToolkit.vim'
 Plugin 'epmatsw/ag.vim'
-Plugin 'euclio/vim-markdown-composer'
+"Plugin 'euclio/vim-markdown-composer'
 Plugin 'fatih/vim-go'
 Plugin 'godlygeek/tabular'
 Plugin 'groovy.vim'
@@ -30,6 +30,7 @@ Plugin 'lepture/vim-jinja'
 Plugin 'majutsushi/tagbar'
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'markcornick/vim-vagrant'
+Plugin 'mzlogin/vim-markdown-toc'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'ngmy/vim-rubocop'
 Plugin 'nyarly/cadre'
@@ -37,19 +38,22 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'perl-support.vim'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'previm/previm'
 Plugin 'pseewald/vim-anyfold'
 Plugin 'python-mode/python-mode'
 Plugin 'robbles/logstash.vim'
+Plugin 'ruby-formatter/rufo-vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'shumphrey/fugitive-gitlab.vim'
 Plugin 'stephpy/vim-php-cs-fixer'
-Plugin 'taglist-plus'
+" Plugin 'taglist-plus'
 Plugin 'taiansu/nerdtree-ag'
 Plugin 'tell-k/vim-autopep8'
 Plugin 'tfnico/vim-gradle'
 Plugin 'tomasr/molokai'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tyru/open-browser.vim'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'vcscommand.vim'
 Plugin 'vim-perl/vim-perl'
@@ -57,7 +61,6 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'w0rp/ale'
 Plugin 'wookiehangover/jshint.vim'
-Plugin 'xolox/vim-easytags'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-session'
 call vundle#end()
@@ -66,7 +69,7 @@ filetype plugin indent on
 
 autocmd filetype css setlocal equalprg=csstidy\ -\ --silent=true\ \--template=low
 
-colorscheme Tomorrow-Night-Eighties
+colorscheme base16-tomorrow-night
 syntax on
 
 set  antialias
@@ -148,6 +151,9 @@ autocmd FileType ruby,eruby set filetype=ruby.eruby.chef
 " ruby / chef syntax checking
 let g:syntastic_ruby_checkers = [ 'rubocop', 'mri' ]
 
+" Enable rufo (RUby FOrmat)
+" let g:rufo_auto_formatting = 1
+
 " python / pymode
 let g:pymode = 1
 let g:pymode_python = 'python3'
@@ -190,6 +196,15 @@ let g:tagbar_type_markdown = {
         \ 's' : 'section',
     \ },
     \ 'sort': 0,
+\ }
+
+" Ansible tagbar
+let g:tagbar_type_ansible = {
+    \ 'ctagstype' : 'ansible',
+    \ 'kinds' : [ 
+        \ 't:tasks'
+    \],
+    \ 'sort' : 0
 \ }
 
 " Gitlab fugitive
