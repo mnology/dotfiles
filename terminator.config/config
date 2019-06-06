@@ -1,0 +1,84 @@
+[global_config]
+  enabled_plugins = TerminatorThemes, LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
+  extra_styling = False
+  hide_from_taskbar = True
+  homogeneous_tabbar = False
+  scroll_tabbar = True
+  sticky = True
+  tab_position = hidden
+  title_font = Source Code Pro for Powerline 9
+  title_use_system_font = False
+  window_state = fullscreen
+[keybindings]
+  hide_window = F12
+[layouts]
+  [[default]]
+    [[[child0]]]
+      fullscreen = True
+      last_active_term = 5e2f96bd-d321-4e0f-9700-54e18ed6bf65
+      last_active_window = True
+      maximised = False
+      order = 0
+      parent = ""
+      position = 1920:0
+      size = 1920, 1200
+      title = /usr/bin/zsh
+      type = Window
+    [[[terminal1]]]
+      order = 0
+      parent = child0
+      profile = Tomorrow Night
+      type = Terminal
+      uuid = 5e2f96bd-d321-4e0f-9700-54e18ed6bf65
+[plugins]
+[profiles]
+  [[default]]
+    background_color = "#2d2d2d"
+    cursor_color = "#d3d0c8"
+    cursor_color_fg = False
+    font = Source Code Pro for Powerline 9
+    foreground_color = "#d3d0c8"
+    palette = "#282828:#cc241d:#98971a:#d79921:#458588:#b16286:#689d6a:#a89984:#928374:#fb4934:#b8bb26:#fabd2f:#83a598:#d3869b:#8ec07c:#ebdbb2"
+    scrollback_lines = 2048
+    show_titlebar = False
+    use_system_font = False
+  [[Brogrammer]]
+    background_color = "#131313"
+    cursor_color = "#b9b9b9"
+    cursor_color_fg = False
+    font = Source Code Pro for Powerline 9
+    foreground_color = "#d6dbe5"
+    palette = "#1f1f1f:#f81118:#2dc55e:#ecba0f:#2a84d2:#4e5ab7:#1081d6:#d6dbe5:#d6dbe5:#de352e:#1dd361:#f3bd09:#1081d6:#5350b9:#0f7ddb:#ffffff"
+    scrollback_lines = 2048
+    show_titlebar = False
+    use_system_font = False
+  [[SpaceGray Eighties]]
+    background_color = "#222222"
+    cursor_color = "#bbbbbb"
+    cursor_color_fg = False
+    font = Source Code Pro for Powerline 9
+    foreground_color = "#bdbaae"
+    palette = "#15171c:#ec5f67:#81a764:#fec254:#5486c0:#bf83c1:#57c2c1:#efece7:#555555:#ff6973:#93d493:#ffd256:#4d84d1:#ff55ff:#83e9e4:#ffffff"
+    scrollback_lines = 2048
+    show_titlebar = False
+    use_system_font = False
+  [[Tomorrow Night]]
+    background_color = "#1d1f21"
+    cursor_color = "#c5c8c6"
+    cursor_color_fg = False
+    font = Source Code Pro for Powerline 9
+    foreground_color = "#c5c8c6"
+    palette = "#000000:#cc6666:#b5bd68:#f0c674:#81a2be:#b294bb:#8abeb7:#ffffff:#000000:#cc6666:#b5bd68:#f0c674:#81a2be:#b294bb:#8abeb7:#ffffff"
+    scrollback_lines = 2048
+    show_titlebar = False
+    use_system_font = False
+  [[Tomorrow Night Eighties]]
+    background_color = "#2d2d2d"
+    cursor_color = "#cccccc"
+    cursor_color_fg = False
+    font = Source Code Pro for Powerline 9
+    foreground_color = "#cccccc"
+    palette = "#000000:#f2777a:#99cc99:#ffcc66:#6699cc:#cc99cc:#66cccc:#ffffff:#000000:#f2777a:#99cc99:#ffcc66:#6699cc:#cc99cc:#66cccc:#ffffff"
+    scrollback_lines = 2048
+    show_titlebar = False
+    use_system_font = False
