@@ -22,3 +22,9 @@
 [submodule "terminator-themes"]
 	path = terminator-themes
 	url = git@github.com:EliverLara/terminator-themes.git
+[submodule "pyenv"]
+	path = pyenv
+	url = https://github.com/pyenv/pyenv.git
+[submodule "nvm"]
+	path = nvm
+	url = https://github.com/nvm-sh/nvm.git
