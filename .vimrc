@@ -143,6 +143,9 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exe = 'npm run lint --'
+
 " Autoformat
 let g:formatdef_present_java = '"astyle --mode=java --style=java -pcHs4"'
 let g:formatters_java = [ 'present_java' ]
