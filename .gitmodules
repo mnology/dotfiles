@@ -28,3 +28,6 @@
 [submodule "nvm"]
 	path = nvm
 	url = https://github.com/nvm-sh/nvm.git
+[submodule "rbenv"]
+	path = rbenv
+	url = https://github.com/rbenv/rbenv.git
