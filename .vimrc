@@ -6,6 +6,7 @@ set rtp+=/usr/local/lib/python2.7/dist-packages/powerline/bindings/vim/
 call vundle#begin()
 
 " Plugin '42wim/vim-shfmt'
+Plugin 'ambv/black'
 Plugin 'ajh17/Spacegray.vim'
 Plugin 'bash-support.vim'
 Plugin 'benmills/vimux'
