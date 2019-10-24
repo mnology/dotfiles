@@ -215,7 +215,7 @@ let g:tagbar_type_ansible = {
 
 " Gitlab fugitive
 let g:fugitive_gitlab_domains = ['https://git.sdo.jlrmotor.com']
-let g:gitlab_api_keys = { 'git.sdo.jlrmotor.com': '2qt9kMoBGcsaNexwdtoL' }
+let g:gitlab_api_keys = { 'git.sdo.jlrmotor.com': '' }
 
 " Vim startup plugins
 autocmd VimEnter * NERDTree
