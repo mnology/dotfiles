@@ -23,11 +23,17 @@
 [difftool]
   prompt = false
 [alias]
+  au = add -u
+  cane = commit --amend --no-edit
+	co = checkout
+  fwl = push --force-with-lease
+  flog = foresta --style=10 --reverse
+  iter = !git au && git cane && git fwl
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
-	co = checkout
 	st = status
 	gui = !sh -c /usr/local/Cellar/git/2.8.3/libexec/git-core/git-gui
+	surm = submodule update --remote --merge
 [core]
   excludesfile = /Users/**USERNAME**/.gitignore_global
 [merge]
@@ -36,3 +42,5 @@
   prompt = false
 [pull]
 	rebase = true
+[init]
+	templateDir = /home/ejohanse/.git-template
