@@ -12,7 +12,7 @@ URxvt*borderless:      true
 URxvt*loginShell:      true
 URxvt.depth:           32
 !URxvt.shading:         75
-URxvt.termName:        rxvt-256color 
+URxvt.termName:        rxvt-256color
 URxvt*font:            xft:Source\ Code\ Pro\ for\ Powerline:size=8:style=Regular
 URxvt*boldFont:        xft:Source\ Code\ Pro\ for\ Powerline:size=8:style=Bold
 URxvt*italicFont:      xft:Source\ Code\ Pro\ for\ Powerline:size=8:style=Italic

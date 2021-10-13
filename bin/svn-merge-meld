@@ -32,4 +32,3 @@ if __name__ == "__main__":
         shutil.copy(mine, merged)
     else:
         sys.exit(-2)
-
