@@ -7,12 +7,13 @@ set runtimepath+=/usr/local/lib/python3.6/dist-packages/powerline/bindings/vim/
 call vundle#begin()
 
 " Plugin '42wim/vim-shfmt'
+Plugin 'ap/vim-buftabline'
 Plugin 'psf/black'
 Plugin 'ajh17/Spacegray.vim'
 Plugin 'bash-support.vim'
 Plugin 'benmills/vimux'
-Plugin 'bling/vim-airline'
-Plugin 'bling/vim-bufferline'
+"Plugin 'bling/vim-airline'
+"Plugin 'bling/vim-bufferline'
 Plugin 'Chiel92/vim-autoformat'
 Plugin 'chriskempson/base16-vim'
 Plugin 'chriskempson/vim-tomorrow-theme'
@@ -31,6 +32,7 @@ Plugin 'hhff/SpacegrayEighties.vim'
 Plugin 'juliosueiras/vim-terraform-completion'
 Plugin 'juneedahamed/svnj.vim'
 Plugin 'lepture/vim-jinja'
+Plugin 'lambdalisue/vim-pyenv'
 Plugin 'majutsushi/tagbar'
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'markcornick/vim-vagrant'
@@ -42,6 +44,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'perl-support.vim'
 Plugin 'preservim/nerdcommenter'
+Plugin 'powerline/powerline'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'previm/previm'
 Plugin 'pseewald/vim-anyfold'
@@ -140,6 +143,7 @@ let g:php_cs_fixer_config='default'
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+"set showtabline=2
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -232,8 +236,8 @@ let g:fugitive_gitlab_domains = [
       \ ]
 
 let g:gitlab_api_keys = {
-      \ 'git.sdo.jlrmotor.com': '***REMOVED***',
-      \ 'git-gdd.sdo.jlrmotor.com': '***REMOVED***'
+      \ 'git.sdo.jlrmotor.com': ''
+      \ 'git-gdd.sdo.jlrmotor.com': ''
       \ }
 
 " Vim startup plugins
