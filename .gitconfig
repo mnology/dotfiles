@@ -34,6 +34,7 @@
 	st = status
 	gui = !sh -c /usr/local/Cellar/git/2.8.3/libexec/git-core/git-gui
 	surm = submodule update --remote --merge
+	ms = !git submodule sync && git surm
 [core]
   excludesfile = /Users/**USERNAME**/.gitignore_global
 [merge]
