@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 alias ls='ls --color'
 alias uzbl='UZBL_DOWNLOAD_DIR=~/Downloads uzbl-tabbed'
 
@@ -15,6 +16,6 @@ wsr() {
     filter="${no_ssh} and ${cfilt}"
   fi
 
-  R_DUMP="sudo tcpdump -U -s 0 -i ${if} -w - '${filter}'"
-  ssh ${host} ${R_DUMP} | wireshark -k -i -
+  R_DUMP=sudo tcpdump -U -s 0 -i "${if}" -w - "'${filter}'"
+  ssh "${host}" "${R_DUMP}" | wireshark -k -i -
 }

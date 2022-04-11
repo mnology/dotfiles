@@ -1,10 +1,44 @@
 ---
 
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
-    hooks:
-      - id: check-added-large-files
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-      - id: detect-private-key
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.2.0
+      hooks:
+          - id: check-added-large-files
+          - id: check-case-conflict
+          - id: check-executables-have-shebangs
+          - id: check-json
+          - id: check-merge-conflict
+          - id: check-shebang-scripts-are-executable
+          - id: check-symlinks
+          - id: check-yaml
+          - id: debug-statements
+          - id: destroyed-symlinks
+          - id: detect-aws-credentials
+          - id: detect-private-key
+          - id: double-quote-string-fixer
+          - id: end-of-file-fixer
+          - id: mixed-line-ending
+          - id: pretty-format-json
+            args:
+                - --autofix
+          - id: trailing-whitespace
+    - repo: https://github.com/asottile/pyupgrade
+      rev: v2.32.0
+      hooks:
+          - id: pyupgrade
+    - repo: https://github.com/asottile/reorder_python_imports
+      rev: v3.0.1
+      hooks:
+          - id: reorder-python-imports
+    - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+      rev: 0.1.1
+      hooks:
+          - id: yamlfmt
+    - repo: https://github.com/Lucas-C/pre-commit-hooks
+      rev: v1.1.13
+      hooks:
+          - id: forbid-crlf
+          - id: remove-crlf
+          - id: forbid-tabs
+          - id: remove-tabs
