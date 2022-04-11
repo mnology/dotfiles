@@ -1,21 +1,22 @@
+---
 # http://www.rubydoc.info/github/bbatsov/rubocop/Rubocop/Cop/Style/MethodLength
 Metrics/MethodLength:
-  Max: 60
-  CountComments: false
-  Enabled: true
+    Max: 60
+    CountComments: false
+    Enabled: true
 
 # http://www.rubydoc.info/github/bbatsov/rubocop/Rubocop/Cop/Style/Encoding
 Style/Encoding:
-  Enabled: false
+    Enabled: false
 
 # http://www.rubydoc.info/github/bbatsov/rubocop/Rubocop/Cop/Style/SignalException
 Style/SignalException:
-  EnforcedStyle: only_raise
+    EnforcedStyle: only_raise
 
 # http://www.rubydoc.info/github/bbatsov/rubocop/Rubocop/Cop/Style/BracesAroundHashParameters
 Style/BracesAroundHashParameters:
-  EnforcedStyle: braces
+    EnforcedStyle: braces
 
 # http://www.rubydoc.info/github/bbatsov/rubocop/Rubocop/Cop/Style/EmptyLiteral
 Style/EmptyLiteral:
-  Enabled: false
+    Enabled: false
