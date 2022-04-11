@@ -1,5 +1,7 @@
 [global_config]
   focus = system
+  window_state = fullscreen
+  borderless = True
   tab_position = hidden
   scroll_tabbar = True
   homogeneous_tabbar = False
@@ -8,7 +10,7 @@
   enabled_plugins = LaunchpadBugURLHandler, LaunchpadCodeURLHandler, APTURLHandler, TerminalShot, TerminatorThemes
   always_split_with_profile = True
   title_use_system_font = False
-  title_font = JuliaMono 10
+  title_font = JuliaMono 14
 [keybindings]
   hide_window = F12
 [profiles]
@@ -16,7 +18,7 @@
     background_color = "#2d2d2d"
     cursor_color = "#d3d0c8"
     cursor_color_fg = False
-    font = JuliaMono 10
+    font = JuliaMono 14
     foreground_color = "#d3d0c8"
     show_titlebar = False
     scrollback_lines = 2048
@@ -207,7 +209,7 @@
     background_color = "#1e2127"
     cursor_color = "#676c76"
     cursor_color_fg = False
-    font = JuliaMono 10
+    font = JuliaMono 14
     foreground_color = "#5c6370"
     show_titlebar = False
     scrollback_lines = 2048
@@ -217,7 +219,7 @@
     background_color = "#282c34"
     cursor_color = "#a3b3cc"
     cursor_color_fg = False
-    font = JuliaMono 10
+    font = JuliaMono 14
     foreground_color = "#dcdfe4"
     show_titlebar = False
     scrollback_lines = 2048

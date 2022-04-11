@@ -113,7 +113,7 @@ set  listchars=tab:>.,eol:\$
 set  visualbell
 set  wildignore=*.bak,*.o,*.e,*~
 set  wildmenu
-set  guifont=JuliaMono\ 10
+set  guifont=JuliaMono\ 14
 set  antialias enc=utf-8
 
 " airline
@@ -236,7 +236,7 @@ let g:fugitive_gitlab_domains = [
       \ ]
 
 let g:gitlab_api_keys = {
-      \ 'git.sdo.jlrmotor.com': ''
+      \ 'git.sdo.jlrmotor.com': '',
       \ 'git-gdd.sdo.jlrmotor.com': ''
       \ }
 
