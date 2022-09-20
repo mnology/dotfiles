@@ -1,12 +1,13 @@
 [global_config]
   focus = system
-  window_state = fullscreen
+  window_state = maximise
   borderless = True
   tab_position = hidden
   scroll_tabbar = True
   homogeneous_tabbar = False
+  hide_from_taskbar = True
   sticky = True
-  inactive_color_offset = 0.75
+  inactive_color_offset = 0.5065359477124183
   enabled_plugins = LaunchpadBugURLHandler, LaunchpadCodeURLHandler, APTURLHandler, TerminalShot, TerminatorThemes
   always_split_with_profile = True
   title_use_system_font = False

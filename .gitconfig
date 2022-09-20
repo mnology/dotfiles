@@ -1,23 +1,23 @@
 [gui]
-    fontui = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
-    fontdiff = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
+  fontui = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
+  fontdiff = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
 [user]
-    email = ejohanse@jaguarlandrover.com
-    name = Erik Johansen
+  email = ejohanse@jaguarlandrover.com
+  name = Erik Johansen
 [alias]
-    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
 [color]
-    ui = true
+  ui = true
 [diff]
-    tool = meld
+  tool = meld
 [branch]
-    autosetupmerge = true
-    autoSetupRebase = remote
+  autosetupmerge = true
+  autoSetupRebase = remote
 [push]
-    default = simple
+  default = simple
 [core]
-    packedGitWindowSize = 16m
-    packedGitLimit = 128m
+  packedGitWindowSize = 16m
+  packedGitLimit = 128m
 [pack]
   windowMemory = 512m
 [difftool]
@@ -25,16 +25,16 @@
 [alias]
   au = add -u
   cane = commit --amend --no-edit
-    co = checkout
+  co = checkout
   fwl = push --force-with-lease
   flog = foresta --style=10 --reverse
   iter = !git au && git cane && git fwl
-    lol = log --graph --decorate --pretty=oneline --abbrev-commit
-    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
-    st = status
-    gui = !sh -c /usr/local/Cellar/git/2.8.3/libexec/git-core/git-gui
-    surm = submodule update --remote --merge
-    ms = !git submodule sync && git surm
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit
+  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  st = status
+  gui = !sh -c /usr/local/Cellar/git/2.8.3/libexec/git-core/git-gui
+  surm = submodule update --remote --merge --jobs 12
+  ms = !git submodule update && git surm
 [core]
   excludesfile = /Users/**USERNAME**/.gitignore_global
 [merge]
@@ -42,6 +42,8 @@
 [mergetool]
   prompt = false
 [pull]
-    rebase = true
+  rebase = true
 [init]
-    templateDir = /home/ejohanse/.git-template
+  templateDir = /home/ejohanse/.git-template
+[safe]
+    directory = /home/ejohanse/devel/ADAS/loki/val-dev/val-di/val-ndas-model

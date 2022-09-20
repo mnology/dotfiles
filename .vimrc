@@ -3,10 +3,11 @@ scriptencoding utf-8
 " set nocompatible
 filetype off
 set runtimepath+=~/.vim/bundle/Vundle.vim/
-set runtimepath+=/usr/local/lib/python3.6/dist-packages/powerline/bindings/vim/
+set runtimepath+=/home/ejohanse/.pyenv/versions/3.8.13/lib/python3.8/site-packages/powerline/bindings/vim/
 call vundle#begin()
 
 " Plugin '42wim/vim-shfmt'
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'ap/vim-buftabline'
 Plugin 'psf/black'
 Plugin 'ajh17/Spacegray.vim'
@@ -69,7 +70,6 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'vcscommand.vim'
 Plugin 'vim-perl/vim-perl'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'VundleVim/Vundle.vim'
 Plugin 'w0rp/ale'
 Plugin 'wookiehangover/jshint.vim'
 Plugin 'xolox/vim-misc'
