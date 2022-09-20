@@ -28,4 +28,3 @@
 [submodule ".xresources.d/base16-xresources"]
 	path = .xresources.d/base16-xresources
 	url = git@github.com:base16-project/base16-xresources.git
-	ref = main
