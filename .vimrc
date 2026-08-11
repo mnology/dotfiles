@@ -13,6 +13,7 @@ Plugin 'psf/black'
 Plugin 'ajh17/Spacegray.vim'
 Plugin 'bash-support.vim'
 Plugin 'benmills/vimux'
+Plugin 'bracki/vim-prometheus'
 "Plugin 'bling/vim-airline'
 "Plugin 'bling/vim-bufferline'
 Plugin 'Chiel92/vim-autoformat'
@@ -25,7 +26,9 @@ Plugin 'editorconfig/editorconfig-vim'
 Plugin 'epmatsw/ag.vim'
 Plugin 'euclio/vim-markdown-composer'
 Plugin 'fatih/vim-go'
+Plugin 'gergap/vim-ollama'
 Plugin 'godlygeek/tabular'
+Plugin 'google/vim-jsonnet'
 Plugin 'groovy.vim'
 Plugin 'hashivim/vim-terraform'
 Plugin 'hhff/SpacegrayEighties.vim'
@@ -52,6 +55,7 @@ Plugin 'pseewald/vim-anyfold'
 Plugin 'python-mode/python-mode'
 Plugin 'robbles/logstash.vim'
 Plugin 'ruby-formatter/rufo-vim'
+Plugin 'RRethy/base16-nvim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'sheerun/vim-polyglot'
@@ -60,6 +64,7 @@ Plugin 'stephpy/vim-php-cs-fixer'
 Plugin 'stephpy/vim-yaml'
 " Plugin 'taglist-plus'
 Plugin 'taiansu/nerdtree-ag'
+Plugin 'Ttibsi/pre-commit.nvim'
 Plugin 'tell-k/vim-autopep8'
 Plugin 'tfnico/vim-gradle'
 Plugin 'tomasr/molokai'
@@ -70,15 +75,16 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'vcscommand.vim'
 Plugin 'vim-perl/vim-perl'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'w0rp/ale'
+Plugin 'dense-analysis/ale'
 Plugin 'wookiehangover/jshint.vim'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-session'
+Plugin 'ryanoasis/vim-devicons'
 call vundle#end()
 
 filetype plugin indent on
 
-colorscheme base16-tomorrow-night-eighties
+colorscheme base16-rebecca
 syntax on
 
 set  antialias
@@ -88,6 +94,7 @@ set  autowrite
 set  backspace=indent,eol,start
 set  background=dark
 set  colorcolumn=+1
+set  encoding=UTF-8
 set  expandtab
 set  foldmethod=syntax
 set  foldcolumn=3
@@ -113,7 +120,7 @@ set  listchars=tab:>.,eol:\$
 set  visualbell
 set  wildignore=*.bak,*.o,*.e,*~
 set  wildmenu
-set  guifont=JuliaMono\ 14
+set  guifont=Fira\ Code\ 12
 set  antialias enc=utf-8
 
 " airline
@@ -239,6 +246,8 @@ let g:gitlab_api_keys = {
       \ '': '',
       \ '': ''
       \ }
+
+let g:ollama_use_venv = 1
 
 " Vim startup plugins
 augroup startup

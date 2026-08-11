@@ -27,4 +27,7 @@
 	url = https://github.com/rbenv/rbenv.git
 [submodule ".xresources.d/base16-xresources"]
 	path = .xresources.d/base16-xresources
-	url = git@github.com:base16-project/base16-xresources.git
+	url = git@github.com:tinted-theming/tinted-xresources.git
+[submodule "nerd-fonts"]
+	path = nerd-fonts
+	url = git@github.com:ryanoasis/nerd-fonts.git

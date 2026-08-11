@@ -15,6 +15,7 @@
   autoSetupRebase = remote
 [push]
   default = simple
+  autoSetupRemote = true
 [core]
   packedGitWindowSize = 16m
   packedGitLimit = 128m
@@ -45,5 +46,6 @@
   rebase = true
 [init]
   templateDir = /home/ejohanse/.git-template
-[safe]
-    directory = /home/ejohanse/devel/ADAS/loki/val-dev/val-di/val-ndas-model
+[credential "https://"]
+    helper =
+    helper = !/usr/bin/glab auth git-credential
