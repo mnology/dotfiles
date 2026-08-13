@@ -1,0 +1,12 @@
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+vim.opt.smartindent = true
+vim.opt.foldmethod = "syntax"
+vim.opt.foldlevelstart = 0
+vim.opt.background = "dark"
+vim.opt.encoding = "utf-8"
+vim.opt.mouse = "a"
+vim.opt.guifont = "Fira Code:h12"

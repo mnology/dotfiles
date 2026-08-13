@@ -1,2 +1,63 @@
-.vim/bundle
+# Secrets
+.env
+.env.*
+*.local
+*.local.lua
+*.local.json
+secrets.*
+tokens.*
+credentials.*
+
+# Archives / backups
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.rar
+
+*.bak
+*.old
+*.orig
+*.rej
+*.so
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Neovim
+nvim/.netrwhist
+
+# Vim
+.vim/
+
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# OS
 bin/
+.DS_Store
+Thumbs.db
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Temporary
+tmp/
+temp/
+
+# Local workstation state
+.cache/

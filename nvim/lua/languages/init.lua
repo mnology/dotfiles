@@ -1,0 +1,8 @@
+require("languages.folds")
+require("languages.perl")
+require("languages.php")
+require("languages.python")
+require("languages.terraform")
+require("languages.ansible")
+require("languages.tagbar")
+require("languages.chef")
