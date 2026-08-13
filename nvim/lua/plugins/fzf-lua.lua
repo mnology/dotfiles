@@ -2,7 +2,7 @@ return {
   "ibhagwan/fzf-lua",
 
   config = function()
-    fzf = require("fzf-lua")
+    local fzf = require("fzf-lua")
 
     fzf.setup()
 
@@ -12,5 +12,10 @@ return {
     vim.keymap.set("n", "<leader>fh", fzf.helptags, { desc = "Help" })
     vim.keymap.set("n", "<leader>fc", fzf.commands, { desc = "Commands" })
     vim.keymap.set("n", "<leader>fr", fzf.resume, { desc = "Resume" })
+    vim.keymap.set("n", "<leader><Tab>", function()
+      require("fzf-lua").buffers()
+    end, {
+      desc = "Buffers",
+    })
   end,
 }

@@ -31,6 +31,7 @@ return {
       jsonc = { "prettier" },
 
       yaml = { "prettier" },
+      toml = { "tombi" },
 
       markdown = { "prettier" },
 

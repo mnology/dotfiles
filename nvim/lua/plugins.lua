@@ -70,7 +70,6 @@ return {
   { "scrooloose/nerdtree" },
   { "tpope/vim-fugitive" },
   { "dense-analysis/ale" },
-  { "preservim/tagbar" },
   { "tpope/vim-commentary" },
   { "tpope/vim-surround" },
   { "easymotion/vim-easymotion" },
