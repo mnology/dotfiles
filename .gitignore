@@ -61,3 +61,4 @@ temp/
 
 # Local workstation state
 .cache/
+.git-template/
