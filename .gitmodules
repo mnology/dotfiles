@@ -31,3 +31,6 @@
 [submodule "nerd-fonts"]
 	path = nerd-fonts
 	url = git@github.com:ryanoasis/nerd-fonts.git
+[submodule "tpack"]
+	path = tpack
+	url = git@github.com:tmuxpack/tpack

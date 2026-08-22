@@ -13,7 +13,7 @@ opt.backspace = {
 opt.background = "dark"
 
 opt.colorcolumn = "+1"
-vim.cmd("colorscheme base16-dracula")
+vim.cmd("colorscheme hivacruz")
 
 opt.expandtab = true
 

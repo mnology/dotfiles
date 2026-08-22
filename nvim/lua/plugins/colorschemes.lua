@@ -67,4 +67,8 @@ return {
   {
     "craftzdog/solarized-osaka.nvim",
   },
+  {
+    "kinoute/vim-hivacruz-theme",
+    name = "hivacruz",
+  },
 }

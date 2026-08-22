@@ -2,7 +2,7 @@ if not vim.g.neovide then
   return
 end
 
-vim.o.guifont = "Fira Code:h12"
+vim.o.guifont = "Fira Code:h10"
 
 vim.g.neovide_remember_window_size = true
 

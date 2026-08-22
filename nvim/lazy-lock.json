@@ -5,7 +5,7 @@
   },
   "ale": {
     "branch": "master",
-    "commit": "199a95d386cb856c27e5b90d4e3ea8bd45a58c23"
+    "commit": "1c6e71732f3811197ec21cd6d3130791955ca80a"
   },
   "ansible-vim": {
     "branch": "master",
@@ -13,7 +13,7 @@
   },
   "avante.nvim": {
     "branch": "main",
-    "commit": "8a5a5c16a3c693bf7d9a8da1ee78269e8728879b"
+    "commit": "d1fa2c8bdb810eb8600031efec4df602459f4c97"
   },
   "bamboo.nvim": {
     "branch": "master",
@@ -25,7 +25,7 @@
   },
   "black": {
     "branch": "main",
-    "commit": "74371e2041a3120a049ced8f1cab0e7a6bc8ecd3"
+    "commit": "8947c48ef2077c3a301b03c1e814dc2e3f78436e"
   },
   "catppuccin": {
     "branch": "main",
@@ -41,7 +41,7 @@
   },
   "cyberdream.nvim": {
     "branch": "main",
-    "commit": "3203b1673967e820231a9049a540fa8317bd270c"
+    "commit": "39e1fda12c0704e01029b286a4c7e77e33a0c5cd"
   },
   "dressing.nvim": {
     "branch": "master",
@@ -53,7 +53,7 @@
   },
   "fugitive-gitlab.vim": {
     "branch": "master",
-    "commit": "3584cf7e607ba7822f991d407a8d780e05aae287"
+    "commit": "effc1fcb81803aa9c1322b089c7f7a2b53cf3dcc"
   },
   "fzf-lua": {
     "branch": "main",
@@ -74,6 +74,10 @@
   "harpoon": {
     "branch": "harpoon2",
     "commit": "87b1a3506211538f460786c23f98ec63ad9af4e5"
+  },
+  "hivacruz": {
+    "branch": "master",
+    "commit": "2f9d3dd2f0129a254de5515fa72f442d920f6672"
   },
   "img-clip.nvim": {
     "branch": "main",
@@ -129,7 +133,7 @@
   },
   "nui.nvim": {
     "branch": "main",
-    "commit": "de740991c12411b663994b2860f1a4fd0937c130"
+    "commit": "10fc361835c856ba4233ef5ea135b919bf3dce97"
   },
   "nvim-cmp": {
     "branch": "main",
@@ -137,11 +141,11 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "51dbf5359da86721662c87ca10eb73add973737b"
+    "commit": "bff1bd61cb1455040533201ca1edf1e84efa578f"
   },
   "nvim-treesitter": {
     "branch": "main",
-    "commit": "a1bcffc8095c142ad1f7a9671a4ae180333f9209"
+    "commit": "074aa4422bf029908338e855d0c0f71470a971bb"
   },
   "nvim-web-devicons": {
     "branch": "master",
@@ -181,7 +185,7 @@
   },
   "solarized-osaka.nvim": {
     "branch": "main",
-    "commit": "0df74ef0ed6ce9b5aa2d194f1bd6f25a64e11bcc"
+    "commit": "7be007658c1ba2ce303c004613e09af16efb5157"
   },
   "tabular": {
     "branch": "master",
