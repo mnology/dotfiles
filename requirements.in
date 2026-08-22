@@ -1,5 +1,7 @@
+aider-chat
 ansible
 ansible-lint
+atlassian-python-api
 awscli
 black
 bumpversion
@@ -12,7 +14,11 @@ doxypy
 flake8
 gitlint
 Glances
+huggingface-hub
 jira
+Markdown
 meld
 packaging>=23.2,<24
 pre-commit
+tree-sitter
+yamllint
