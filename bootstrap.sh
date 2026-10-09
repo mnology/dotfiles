@@ -189,6 +189,74 @@ step_cargo() {
   ok "cargo tools installed"
 }
 
+# Install the global Python CLI tools listed in requirements.in, each in its
+# own isolated environment via "uv tool install". This avoids the dependency
+# conflicts of one shared global env. uv comes from mise (see mise config).
+step_python() {
+  log "Installing global Python CLI tools (uv tool install)"
+  local req="${DOTFILES_DIR}/requirements.in"
+  if [[ ! -f "${req}" ]]; then
+    warn "no requirements.in; skipping"
+    return 0
+  fi
+  if ! command -v uv >/dev/null 2>&1; then
+    warn "uv not found (install via 'mise' step first); skipping"
+    return 0
+  fi
+  # One package per non-empty, non-comment line. Keep any version pin.
+  local pkg
+  while IFS= read -r pkg; do
+    pkg="${pkg%%#*}"            # strip inline comments
+    pkg="${pkg//[[:space:]]/}"  # strip whitespace
+    [[ -z "${pkg}" ]] && continue
+    run uv tool install "${pkg}"
+  done < "${req}"
+  ok "Python CLI tools installed"
+}
+
+# Install the terminal (kitty) and mise if missing.
+#   - Debian/Ubuntu: prefer the upstream installer for a current kitty; apt's
+#     build lags. Fall back to apt if curl is unavailable.
+#   - Other hosts: print guidance.
+# WezTerm on native Windows is installed by scripts/windows/setup.ps1.
+step_terminal() {
+  log "Installing terminal (kitty) and mise"
+
+  # mise: the single source of truth for CLI tools.
+  if ! command -v mise >/dev/null 2>&1; then
+    warn "mise missing; run the 'mise' step to install it"
+  else
+    ok "mise present"
+  fi
+
+  if command -v kitty >/dev/null 2>&1; then
+    ok "kitty present: $(kitty --version 2>/dev/null || echo unknown)"
+    return 0
+  fi
+
+  case "$(uname -s)" in
+    Linux*)
+      if command -v curl >/dev/null 2>&1; then
+        warn "installing current kitty from the upstream installer"
+        if [[ "${DRY_RUN}" == "1" ]]; then
+          printf '    [dry-run] curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin\n'
+        else
+          curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+        fi
+        run mkdir -p -- "${HOME}/.local/bin"
+        run ln -sf -- "${HOME}/.local/kitty.app/bin/kitty" "${HOME}/.local/bin/kitty"
+        run ln -sf -- "${HOME}/.local/kitty.app/bin/kitten" "${HOME}/.local/bin/kitten"
+        ok "kitty installed to ~/.local/kitty.app and linked into ~/.local/bin"
+      else
+        warn "curl missing; install the distro package instead: sudo apt install kitty"
+      fi
+      ;;
+    *)
+      warn "install kitty by hand on this host, or use WezTerm on Windows (scripts/windows/setup.ps1)"
+      ;;
+  esac
+}
+
 # Fetch tinty's theme sources and apply base24-hivacruz. This regenerates the
 # kitty include file and shell theme that kitty.conf / zshrc reference.
 step_theme() {
@@ -262,12 +330,14 @@ step_verify() {
 # --- dispatch --------------------------------------------------------------
 
 # Ordered step list and the name->function table (dispatch by data, rule 2).
-readonly -a STEP_ORDER=(check links prezto mise cargo theme tmux fonts verify)
+readonly -a STEP_ORDER=(check terminal links prezto mise python cargo theme tmux fonts verify)
 declare -A STEPS=(
   [check]=step_check
+  [terminal]=step_terminal
   [links]=step_links
   [prezto]=step_prezto
   [mise]=step_mise
+  [python]=step_python
   [cargo]=step_cargo
   [theme]=step_theme
   [tmux]=step_tmux
@@ -286,9 +356,11 @@ Usage:
 
 Steps (default order):
   check    verify prerequisites (git, curl) and repo integrity
+  terminal install kitty (current, upstream installer) and confirm mise
   links    symlink nvim/tmux/starship/mise/shell/tinty/kitty/prezto configs
   prezto   confirm prezto modules are vendored (zsh completion/history)
   mise     install mise (if needed) and all tools from modern/mise/config.toml
+  python   install requirements.in CLI tools in isolated envs (uv tool install)
   cargo    install pinned cargo tools (neovide, tinty, stylua, ...)
   theme    tinty install + apply ${THEME} (regenerates kitty/shell theme)
   tmux     install tpm (tmux plugin manager)

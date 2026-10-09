@@ -17,7 +17,6 @@ Glances
 huggingface-hub
 jira
 Markdown
-meld
 packaging>=23.2,<24
 pre-commit
 tree-sitter

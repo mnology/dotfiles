@@ -7,7 +7,21 @@ return {
     build = vim.fn.has("win32") ~= 0
         and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
       or "make",
-    event = "VeryLazy",
+    -- Lazy-load on the Avante commands and keys instead of VeryLazy, so avante
+    -- never initializes at startup. This stops the start error when the ollama
+    -- provider or RAG endpoint is not running.
+    cmd = {
+      "AvanteAsk",
+      "AvanteToggle",
+      "AvanteChat",
+      "AvanteEdit",
+      "AvanteRefresh",
+      "AvanteBuild",
+    },
+    keys = {
+      { "<leader>aa", desc = "Avante: ask" },
+      { "<leader>at", desc = "Avante: toggle" },
+    },
     version = false, -- Never set this value to "*"! Never!
     ---@module 'avante'
     ---@type avante.Config
