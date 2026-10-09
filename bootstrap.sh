@@ -68,6 +68,10 @@ readonly -a LINKS=(
   "${HOME}/.zpreztorc|${DOTFILES_DIR}/prezto/runcoms/zpreztorc"
   "${HOME}/.zprofile|${DOTFILES_DIR}/prezto/runcoms/zprofile"
   "${HOME}/.zshenv|${DOTFILES_DIR}/prezto/runcoms/zshenv"
+  # Git. .gitconfig needs .gitignore_global for its excludesfile setting.
+  "${HOME}/.gitconfig|${DOTFILES_DIR}/.gitconfig"
+  "${HOME}/.gitignore|${DOTFILES_DIR}/.gitignore"
+  "${HOME}/.gitignore_global|${DOTFILES_DIR}/.gitignore_global"
 )
 
 # --- output helpers --------------------------------------------------------
@@ -103,6 +107,58 @@ step_check() {
   [[ -f "${DOTFILES_DIR}/modern/mise/config.toml" ]] \
     || die "missing modern/mise/config.toml (run from a full clone)"
   ok "git and curl present; repo looks complete"
+}
+
+# System packages for building the cargo tools (neovide) and running the TUI
+# stack on Debian/Ubuntu/WSL. Found by hand on the first WSL setup.
+#
+# Split by whether a portable manager (mise/cargo) can provide it:
+#   apt-only dev packages  - headers/.pc files and the system toolchain. No
+#                            portable equivalent, so always ensure these.
+#   runtime tools          - a plain binary. Install from apt only if it is
+#                            not already on PATH by any method, so portable
+#                            installs are not duplicated.
+# This step uses sudo apt and only runs where apt-get exists.
+step_sysdeps() {
+  log "Installing system build dependencies (apt)"
+  if ! command -v apt-get >/dev/null 2>&1; then
+    warn "no apt-get; install the build deps with your package manager by hand"
+    warn "(need: a C toolchain, freetype, fontconfig, libclang; and imagemagick, unzip, wl-clipboard)"
+    return 0
+  fi
+
+  # apt-only: dev headers and toolchain. mise/cargo cannot supply -dev packages.
+  local apt_only=(
+    build-essential   # C/C++ toolchain for cargo native builds (neovide)
+    libfreetype-dev   # neovide font rendering
+    libfontconfig-dev # neovide font rendering
+    libclang-dev      # bindgen for native cargo crates
+    pkg-config        # lets the build find the -dev .pc files
+  )
+
+  # runtime tools, keyed by the binary that proves one is already present.
+  # "binary|apt-package"
+  local runtime=(
+    "convert|imagemagick"  # image preview (snacks / kitty graphics)
+    "unzip|unzip"          # mason / tool archive extraction
+    "wl-copy|wl-clipboard" # WSLg / Wayland clipboard
+  )
+
+  local to_install=("${apt_only[@]}")
+  local entry bin pkg
+  for entry in "${runtime[@]}"; do
+    bin="${entry%%|*}"
+    pkg="${entry#*|}"
+    if command -v "${bin}" >/dev/null 2>&1; then
+      ok "${pkg} already available (${bin} on PATH); skipping apt"
+    else
+      to_install+=("${pkg}")
+    fi
+  done
+
+  run sudo apt-get update
+  run sudo apt-get install -y "${to_install[@]}"
+  ok "system build dependencies installed"
 }
 
 # Create one symlink from the table, backing up anything real in the way.
@@ -330,9 +386,10 @@ step_verify() {
 # --- dispatch --------------------------------------------------------------
 
 # Ordered step list and the name->function table (dispatch by data, rule 2).
-readonly -a STEP_ORDER=(check terminal links prezto mise python cargo theme tmux fonts verify)
+readonly -a STEP_ORDER=(check sysdeps terminal links prezto mise python cargo theme tmux fonts verify)
 declare -A STEPS=(
   [check]=step_check
+  [sysdeps]=step_sysdeps
   [terminal]=step_terminal
   [links]=step_links
   [prezto]=step_prezto
@@ -356,6 +413,7 @@ Usage:
 
 Steps (default order):
   check    verify prerequisites (git, curl) and repo integrity
+  sysdeps  install apt build deps (toolchain, freetype, fontconfig, ...)
   terminal install kitty (current, upstream installer) and confirm mise
   links    symlink nvim/tmux/starship/mise/shell/tinty/kitty/prezto configs
   prezto   confirm prezto modules are vendored (zsh completion/history)

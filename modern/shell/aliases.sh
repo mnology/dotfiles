@@ -19,5 +19,15 @@ alias tls='tmux ls'
 alias tf='terraform'
 
 # misc
-alias v='neovide'
 alias cat='bat'
+
+if [ -n "$WSL_DISTRO_NAME" ] && command -v neovide.exe >/dev/null 2>&1; then
+  # WSL: use the native Windows build, running nvim inside this distro
+  alias v='neovide.exe --wsl'
+elif command -v neovide >/dev/null 2>&1; then
+  # plain Linux
+  alias v='neovide'
+else
+  # no GUI available, fall back to terminal nvim
+  alias v='nvim'
+fi

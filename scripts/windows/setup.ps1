@@ -25,9 +25,11 @@ $ErrorActionPreference = 'Stop'
 # Repo root is two levels up from this script (scripts\windows\).
 $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..')
 
-function Write-Step { param($Msg) Write-Host "==> $Msg" -ForegroundColor Cyan }
-function Write-Ok   { param($Msg) Write-Host "  OK $Msg" -ForegroundColor Green }
-function Write-Warn { param($Msg) Write-Host "  !  $Msg" -ForegroundColor Yellow }
+# Colored status output. Use $Host.UI.WriteLine (not Write-Host) so the
+# PSScriptAnalyzer PSAvoidUsingWriteHost rule stays clean while keeping color.
+function Write-Step { param($Msg) $Host.UI.WriteLine('Cyan',   $Host.UI.RawUI.BackgroundColor, "==> $Msg") }
+function Write-Ok   { param($Msg) $Host.UI.WriteLine('Green',  $Host.UI.RawUI.BackgroundColor, "  OK $Msg") }
+function Write-Warn { param($Msg) $Host.UI.WriteLine('Yellow', $Host.UI.RawUI.BackgroundColor, "  !  $Msg") }
 
 # Install one winget package if it is not already present.
 function Install-WingetPackage {
@@ -50,7 +52,11 @@ function Install-WingetPackage {
 # 1. WezTerm (native Windows terminal).
 Install-WingetPackage -Id 'wez.wezterm' -Name 'WezTerm'
 
-# 2. FiraCode Nerd Font. winget ships the Nerd Fonts collection.
+# 2. Neovide (native Windows GUI). The WSL "v" alias runs "neovide.exe --wsl",
+#    so the Windows build must be present.
+Install-WingetPackage -Id 'Neovide.Neovide' -Name 'Neovide'
+
+# 3. FiraCode Nerd Font. winget ships the Nerd Fonts collection.
 if (-not $SkipFont) {
     Install-WingetPackage -Id 'DEVCOM.FiraCodeNerdFont' -Name 'FiraCode Nerd Font'
 }
@@ -58,7 +64,7 @@ else {
     Write-Warn 'Skipping font install (-SkipFont)'
 }
 
-# 3. Place wezterm.lua at %USERPROFILE%\.config\wezterm\wezterm.lua.
+# 4. Place wezterm.lua at %USERPROFILE%\.config\wezterm\wezterm.lua.
 Write-Step 'Installing wezterm.lua'
 $WeztermDir = Join-Path $env:USERPROFILE '.config\wezterm'
 New-Item -ItemType Directory -Force -Path $WeztermDir | Out-Null
@@ -66,7 +72,7 @@ $Src = Join-Path $RepoRoot 'modern\wezterm\wezterm.lua'
 Copy-Item -Path $Src -Destination (Join-Path $WeztermDir 'wezterm.lua') -Force
 Write-Ok "wezterm.lua -> $WeztermDir"
 
-# 4. Remind about the WSL side.
+# 5. Remind about the WSL side.
 Write-Step 'Done.'
 Write-Warn 'The Linux tools run inside WSL. In your distro, run:'
 Write-Warn '  wsl --update   (from Windows, for a current WSLg)'

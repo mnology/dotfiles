@@ -6,7 +6,7 @@
   # Use the tracked global ignore file. Edit messages in Neovide.
   # --no-fork makes Neovide block, so Git waits for the message.
   excludesfile = ~/.gitignore_global
-  editor = neovide --no-fork
+  editor = v --no-fork
   pager = delta
   packedGitWindowSize = 16m
   packedGitLimit = 128m
