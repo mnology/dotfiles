@@ -70,5 +70,18 @@ return {
   {
     "kinoute/vim-hivacruz-theme",
     name = "hivacruz",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      -- Apply after the UI has attached. hivacruz.vim indexes
+      -- nvim_list_uis()[0], which is empty during headless/early startup
+      -- and raises E684, so guard with pcall and defer to UIEnter.
+      vim.api.nvim_create_autocmd("UIEnter", {
+        once = true,
+        callback = function()
+          pcall(vim.cmd.colorscheme, "hivacruz")
+        end,
+      })
+    end,
   },
 }

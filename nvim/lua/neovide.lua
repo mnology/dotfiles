@@ -2,7 +2,9 @@ if not vim.g.neovide then
   return
 end
 
-vim.o.guifont = "Fira Code:h10"
+-- Match kitty's font. The Nerd Font variant supplies the icon glyphs that
+-- devicons, lualine, and oil need. Plain "Fira Code" lacks them.
+vim.o.guifont = "FiraCode Nerd Font:h10"
 
 vim.g.neovide_remember_window_size = true
 

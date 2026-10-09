@@ -1,51 +1,70 @@
-[gui]
-  fontui = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
-  fontdiff = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
 [user]
-  email = ejohanse@jaguarlandrover.com
+  email = ejohanse@users.noreply.github.com
   name = Erik Johansen
-[alias]
-  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+
+[core]
+  # Use the tracked global ignore file. Edit messages in Neovide.
+  # --no-fork makes Neovide block, so Git waits for the message.
+  excludesfile = ~/.gitignore_global
+  editor = neovide --no-fork
+  pager = delta
+  packedGitWindowSize = 16m
+  packedGitLimit = 128m
+
 [color]
   ui = true
+
+[alias]
+  # Short daily commands.
+  au = add -u
+  co = checkout
+  st = status
+  cane = commit --amend --no-edit
+  fwl = push --force-with-lease
+  # Iterate on one issue: stage tracked changes, amend, and force-push safely.
+  iter = !git au && git cane && git fwl
+  # Log views.
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit
+  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  flog = foresta --style=10 --reverse
+  # Submodule helpers.
+  surm = submodule update --remote --merge --jobs 12
+  ms = !git submodule update && git surm
+
 [diff]
   tool = meld
+
+[difftool]
+  prompt = false
+
+[merge]
+  tool = meld
+
+[mergetool]
+  prompt = false
+
 [branch]
   autosetupmerge = true
   autoSetupRebase = remote
+
 [push]
   default = simple
   autoSetupRemote = true
-[core]
-  packedGitWindowSize = 16m
-  packedGitLimit = 128m
-[pack]
-  windowMemory = 512m
-[difftool]
-  prompt = false
-[alias]
-  au = add -u
-  cane = commit --amend --no-edit
-  co = checkout
-  fwl = push --force-with-lease
-  flog = foresta --style=10 --reverse
-  iter = !git au && git cane && git fwl
-  lol = log --graph --decorate --pretty=oneline --abbrev-commit
-  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
-  st = status
-  gui = !sh -c /usr/local/Cellar/git/2.8.3/libexec/git-core/git-gui
-  surm = submodule update --remote --merge --jobs 12
-  ms = !git submodule update && git surm
-[core]
-  excludesfile = /Users/**USERNAME**/.gitignore_global
-[merge]
-  tool=meld
-[mergetool]
-  prompt = false
+
 [pull]
   rebase = true
+
+[pack]
+  windowMemory = 512m
+
 [init]
-  templateDir = /home/ejohanse/.git-template
+  templateDir = ~/.git-template
+
 [credential "https://"]
-    helper =
-    helper = !/usr/bin/glab auth git-credential
+  # Use the GitLab CLI as the HTTPS credential helper.
+  helper =
+  helper = !/usr/bin/glab auth git-credential
+
+[gui]
+  fontui = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
+  fontdiff = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
