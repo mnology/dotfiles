@@ -1,4 +1,23 @@
 return {
+  {
+    "tinted-theming/tinted-nvim",
+    version = "0.1.*",
+    priority = 1000,
+    lazy = false,
+    config = function()
+      -- setup() starts the live-reload watcher (live_reload defaults to true).
+      -- Without this call the watcher never runs, so Neovim does not follow
+      -- `tinty apply`. Apply after the UI attaches to avoid headless issues.
+      vim.api.nvim_create_autocmd("UIEnter", {
+        once = true,
+        callback = function()
+          pcall(function()
+            require("tinted-colorscheme").setup()
+          end)
+        end,
+      })
+    end,
+  },
   -- Current
   {
     "RRethy/base16-nvim",
@@ -70,18 +89,5 @@ return {
   {
     "kinoute/vim-hivacruz-theme",
     name = "hivacruz",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      -- Apply after the UI has attached. hivacruz.vim indexes
-      -- nvim_list_uis()[0], which is empty during headless/early startup
-      -- and raises E684, so guard with pcall and defer to UIEnter.
-      vim.api.nvim_create_autocmd("UIEnter", {
-        once = true,
-        callback = function()
-          pcall(vim.cmd.colorscheme, "hivacruz")
-        end,
-      })
-    end,
   },
 }

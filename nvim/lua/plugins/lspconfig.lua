@@ -80,8 +80,12 @@ local function on_lsp_attach(ev)
   nmap("grr", vim.lsp.buf.references, "LSP references")
   nmap("gd", vim.lsp.buf.definition, "LSP definition")
   nmap("K", vim.lsp.buf.hover, "LSP hover")
-  nmap("[d", function() vim.diagnostic.jump({ count = -1 }) end, "Prev diagnostic")
-  nmap("]d", function() vim.diagnostic.jump({ count = 1 }) end, "Next diagnostic")
+  nmap("[d", function()
+    vim.diagnostic.jump({ count = -1 })
+  end, "Prev diagnostic")
+  nmap("]d", function()
+    vim.diagnostic.jump({ count = 1 })
+  end, "Next diagnostic")
 end
 
 return {

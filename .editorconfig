@@ -1,4 +1,31 @@
-[**.js]
+root = true
+
+# Default: 2-space indent for every file. Editors and formatters (stylua,
+# prettier, nvim) read this. Language-specific blocks below override where a
+# language requires tabs or a different width.
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Tabs are required by the language or its standard.
+[Makefile]
+indent_style = tab
+
+[*.mk]
+indent_style = tab
+
+[*.go]
+indent_style = tab
+
+# Markdown keeps trailing whitespace (hard line breaks).
+[*.md]
+trim_trailing_whitespace = false
+
+[*.js]
 indent_style = space
 indent_size = 2
 max_preserve_newlines = 10
@@ -12,11 +39,11 @@ good_stuff = true
 space_after_anon_function = true
 indent_scripts = true
 
-[**.css]
+[*.css]
 indent_style = space
 indent_size = 2
 
-[**.html]
+[*.html]
 indent_style = space
 indent_size = 2
 max_char = 100

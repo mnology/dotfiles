@@ -1,5 +1,5 @@
 shell = "zsh -c '{}'"
-default-scheme = "base24-hivacruz"
+default-scheme = "base24-pastelon-de-amarillos-dark"
 
 [[items]]
 name = "tinted-shell"
@@ -15,3 +15,30 @@ themes-dir = "themes/kitty"
 hook = "[ -n \"$KITTY_PID\" ] && kill -USR1 \"$KITTY_PID\""
 supported-systems = ["base16", "base24"]
 
+[[items]]
+path = "https://github.com/tinted-theming/tinted-terminal"
+name = "tinted-wezterm"
+themes-dir = "themes/wezterm"
+supported-systems = ["base16", "base24"]
+# Touch wezterm.lua to trigger config auto-reload.
+# Derive the Windows profile from cmd.exe so the path works for any user, not
+# just this one. On non-WSL hosts cmd.exe is absent, so the WezTerm sync is
+# skipped and only the Meld hook runs.
+# NOTE: tinty runs each hook as `zsh -c '<hook>'`, so the hook must contain NO
+# single quotes. Use double quotes throughout.
+hook = """
+SRC=$HOME/.local/share/tinted-theming/tinty/repos/tinted-wezterm/themes/wezterm
+if command -v cmd.exe >/dev/null 2>&1; then
+    WIN_PROFILE=$(wslpath "$(cmd.exe /c "echo %USERPROFILE%" 2>/dev/null | tr -d "\\r")" 2>/dev/null)
+    WEZTERM_DIR="$WIN_PROFILE/.config/wezterm"
+    if [ -n "$WIN_PROFILE" ] && [ -d "$SRC" ]; then
+        mkdir -p "$WEZTERM_DIR/colors" && cp "$SRC"/*.toml "$WEZTERM_DIR/colors/"
+        touch -c "$WEZTERM_DIR/wezterm.lua"
+        # Use >| so the write succeeds even when zsh noclobber is set; a plain
+        # > errors with "file exists" on the second apply, which breaks the
+        # whole hook chain (and fires on every tmux/shell start via tinty init).
+        printf "%s" "$TINTY_SCHEME_ID" >| "$WEZTERM_DIR/current_scheme"
+    fi
+fi
+~/.local/bin/meld-tinty.py
+"""

@@ -55,9 +55,11 @@ readonly -a CARGO_TOOLS=(
 # Order matters: mise config must be linked before the 'mise' step installs
 # from it. prezto runcoms are linked individually (matching the current box).
 readonly -a LINKS=(
+  "${HOME}/.local/bin/meld-tinty.py|${DOTFILES_DIR}/bin/meld-tinty.py"
   "${HOME}/.config/nvim|${DOTFILES_DIR}/nvim"
   "${HOME}/.config/starship.toml|${DOTFILES_DIR}/starship.toml"
   "${HOME}/.tmux.conf|${DOTFILES_DIR}/.tmux.conf"
+  "${HOME}/.tmux/status.conf|${DOTFILES_DIR}/modern/tmux/status.conf"
   "${HOME}/.config/mise/config.toml|${DOTFILES_DIR}/modern/mise/config.toml"
   "${HOME}/.config/shell/aliases.sh|${DOTFILES_DIR}/modern/shell/aliases.sh"
   "${HOME}/.config/tinted-theming/tinty/config.toml|${DOTFILES_DIR}/modern/tinty/config.toml"
@@ -76,10 +78,13 @@ readonly -a LINKS=(
 
 # --- output helpers --------------------------------------------------------
 
-log()  { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
-ok()   { printf '\033[1;32m  OK\033[0m %s\n' "$*"; }
+log() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
+ok() { printf '\033[1;32m  OK\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m  ! \033[0m %s\n' "$*" >&2; }
-die()  { printf '\033[1;31merror:\033[0m %s\n' "$*" >&2; exit 1; }
+die() {
+  printf '\033[1;31merror:\033[0m %s\n' "$*" >&2
+  exit 1
+}
 
 # Run a command, or just print it under DRY_RUN.
 run() {
@@ -101,11 +106,14 @@ step_check() {
   log "Checking prerequisites"
   local missing=0 tool
   for tool in git curl; do
-    command -v "${tool}" >/dev/null 2>&1 || { warn "missing: ${tool}"; missing=1; }
+    command -v "${tool}" >/dev/null 2>&1 || {
+      warn "missing: ${tool}"
+      missing=1
+    }
   done
   [[ "${missing}" -eq 0 ]] || die "install the missing prerequisites and re-run"
-  [[ -f "${DOTFILES_DIR}/modern/mise/config.toml" ]] \
-    || die "missing modern/mise/config.toml (run from a full clone)"
+  [[ -f "${DOTFILES_DIR}/modern/mise/config.toml" ]] ||
+    die "missing modern/mise/config.toml (run from a full clone)"
   ok "git and curl present; repo looks complete"
 }
 
@@ -164,11 +172,14 @@ step_sysdeps() {
 # Create one symlink from the table, backing up anything real in the way.
 link_one() {
   local link_path="$1" target_path="$2"
-  [[ -e "${target_path}" ]] || { warn "target missing, skipping: ${target_path}"; return 0; }
+  [[ -e "${target_path}" ]] || {
+    warn "target missing, skipping: ${target_path}"
+    return 0
+  }
 
   # Already correct? Nothing to do (idempotent).
-  if [[ -L "${link_path}" \
-        && "$(readlink -f -- "${link_path}")" == "$(readlink -f -- "${target_path}")" ]]; then
+  if [[ -L "${link_path}" &&
+    "$(readlink -f -- "${link_path}")" == "$(readlink -f -- "${target_path}")" ]]; then
     ok "already linked: ${link_path}"
     return 0
   fi
@@ -267,11 +278,11 @@ step_python() {
   if [[ -f "${tools}" ]]; then
     local pkg
     while IFS= read -r pkg; do
-      pkg="${pkg%%#*}"            # strip inline comments
-      pkg="${pkg//[[:space:]]/}"  # strip whitespace
+      pkg="${pkg%%#*}"           # strip inline comments
+      pkg="${pkg//[[:space:]]/}" # strip whitespace
       [[ -z "${pkg}" ]] && continue
       run uv tool install "${pkg}"
-    done < "${tools}"
+    done <"${tools}"
     ok "CLI tools installed"
   else
     warn "no requirements.in; skipping CLI tools"
@@ -308,25 +319,25 @@ step_terminal() {
   fi
 
   case "$(uname -s)" in
-    Linux*)
-      if command -v curl >/dev/null 2>&1; then
-        warn "installing current kitty from the upstream installer"
-        if [[ "${DRY_RUN}" == "1" ]]; then
-          printf '    [dry-run] curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin\n'
-        else
-          curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-        fi
-        run mkdir -p -- "${HOME}/.local/bin"
-        run ln -sf -- "${HOME}/.local/kitty.app/bin/kitty" "${HOME}/.local/bin/kitty"
-        run ln -sf -- "${HOME}/.local/kitty.app/bin/kitten" "${HOME}/.local/bin/kitten"
-        ok "kitty installed to ~/.local/kitty.app and linked into ~/.local/bin"
+  Linux*)
+    if command -v curl >/dev/null 2>&1; then
+      warn "installing current kitty from the upstream installer"
+      if [[ "${DRY_RUN}" == "1" ]]; then
+        printf '    [dry-run] curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin\n'
       else
-        warn "curl missing; install the distro package instead: sudo apt install kitty"
+        curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
       fi
-      ;;
-    *)
-      warn "install kitty by hand on this host, or use WezTerm on Windows (scripts/windows/setup.ps1)"
-      ;;
+      run mkdir -p -- "${HOME}/.local/bin"
+      run ln -sf -- "${HOME}/.local/kitty.app/bin/kitty" "${HOME}/.local/bin/kitty"
+      run ln -sf -- "${HOME}/.local/kitty.app/bin/kitten" "${HOME}/.local/bin/kitten"
+      ok "kitty installed to ~/.local/kitty.app and linked into ~/.local/bin"
+    else
+      warn "curl missing; install the distro package instead: sudo apt install kitty"
+    fi
+    ;;
+  *)
+    warn "install kitty by hand on this host, or use WezTerm on Windows (scripts/windows/setup.ps1)"
+    ;;
   esac
 }
 
@@ -368,20 +379,20 @@ step_fonts() {
   fi
 
   case "$(uname -s)" in
-    Linux* | Darwin*)
-      local dest="${HOME}/.local/share/fonts"
-      [[ "$(uname -s)" == "Darwin" ]] && dest="${HOME}/Library/Fonts"
-      run mkdir -p -- "${dest}"
-      run cp -f -- "${src_dir}"/*.ttf "${dest}/"
-      if command -v fc-cache >/dev/null 2>&1; then
-        run fc-cache -f "${dest}"
-      fi
-      ok "fonts installed to ${dest}"
-      ;;
-    *)
-      warn "non-POSIX host detected"
-      warn "install ${src_dir}/*.ttf by hand (right-click -> Install), or on WSL run this step inside the distro"
-      ;;
+  Linux* | Darwin*)
+    local dest="${HOME}/.local/share/fonts"
+    [[ "$(uname -s)" == "Darwin" ]] && dest="${HOME}/Library/Fonts"
+    run mkdir -p -- "${dest}"
+    run cp -f -- "${src_dir}"/*.ttf "${dest}/"
+    if command -v fc-cache >/dev/null 2>&1; then
+      run fc-cache -f "${dest}"
+    fi
+    ok "fonts installed to ${dest}"
+    ;;
+  *)
+    warn "non-POSIX host detected"
+    warn "install ${src_dir}/*.ttf by hand (right-click -> Install), or on WSL run this step inside the distro"
+    ;;
   esac
 }
 
@@ -396,8 +407,8 @@ step_verify() {
   else
     warn "nvim not on PATH yet (open a new shell so mise shims load)"
   fi
-  command -v tinty >/dev/null 2>&1 \
-    && ok "current theme: $(tinty current 2>/dev/null || echo unknown)"
+  command -v tinty >/dev/null 2>&1 &&
+    ok "current theme: $(tinty current 2>/dev/null || echo unknown)"
 }
 
 # --- dispatch --------------------------------------------------------------
@@ -446,7 +457,10 @@ EOF
 
 main() {
   case "${1:-}" in
-    -h | --help) usage; return 0 ;;
+  -h | --help)
+    usage
+    return 0
+    ;;
   esac
 
   local -a requested=()

@@ -123,8 +123,36 @@ hand:
   load only on their filetypes, commands, or keys, so a missing vault or a down
   service never breaks startup.
 
+## Theme switching (tinty apply)
+
+`tinty apply <scheme>` switches the theme across the whole stack at once. The
+tinty config (`modern/tinty/config.toml`) runs a hook per target:
+
+- Shell and kitty: the tinted-shell and tinted-terminal items.
+- Neovim: the `tinted-theming/tinted-nvim` plugin follows the scheme.
+- bat and delta: both read ANSI colors, so they follow the terminal palette.
+  delta is styled with ANSI slots in `.gitconfig`.
+- WezTerm: the hook copies the generated theme and writes `current_scheme`;
+  `wezterm.lua` reads it and reloads. The hook derives the Windows profile from
+  `cmd.exe`, so it works for any user.
+- Meld: `bin/meld-tinty.py` builds a GtkSourceView scheme from the active
+  palette, writes it to `~/.local/share/gtksourceview-4/styles`, and selects it
+  with gsettings.
+
+Platform and version notes:
+
+- tinty runs each hook as `zsh -c '<hook>'`, so a hook must contain no single
+  quotes. Use double quotes.
+- The Meld integration targets `gtksourceview-4`, the version Meld links. The
+  scheme must use the runtime `name` attribute (not the `_name` gettext form)
+  and set `parent-scheme="classic"`, or GtkSourceView does not load it.
+- The WezTerm hook relies on WSL `cmd.exe` and `wslpath`. On non-WSL hosts
+  `cmd.exe` is absent, so the WezTerm sync is skipped.
+
 ## Known follow-ups
 
+- The Meld path (`gtksourceview-4`) is version-bound. A future GtkSourceView 5
+  Meld would need `gtksourceview-5/styles`.
 - Full-history email scrub with BFG. Only recent commits use the anonymized
   address; older history still has the work email.
 - `scripts/windows/setup.ps1` is not lint-tested on Linux (no pwsh). Validate it

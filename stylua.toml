@@ -1,0 +1,8 @@
+# Lua formatting. Without this file stylua defaults to tabs; the repo uses
+# 2-space Lua, so pin it here. conform.nvim's stylua formatter reads this.
+column_width = 100
+line_endings = "Unix"
+indent_type = "Spaces"
+indent_width = 2
+quote_style = "AutoPreferDouble"
+call_parentheses = "Always"

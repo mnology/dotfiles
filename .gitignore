@@ -43,7 +43,10 @@ node_modules/
 *.log
 
 # OS
-bin/
+# Ignore bin/ contents, but keep the tinty Meld theme generator tracked.
+# Use bin/* (not bin/) so git descends and honors the negation below.
+bin/*
+!bin/meld-tinty.py
 .DS_Store
 Thumbs.db
 

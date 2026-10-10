@@ -24,52 +24,75 @@ config.front_end = "WebGpu"
 
 -- Try the tinty-generated theme first, then fall back to embedded colors.
 local function tinty_wezterm_theme()
-  local home = os.getenv("USERPROFILE") or os.getenv("HOME") or ""
-  local path = home
-    .. "/.config/tinted-theming/tinty/wezterm/base24-hivacruz.toml"
-  local file = io.open(path, "r")
-  if file == nil then
-    return nil
-  end
-  file:close()
-  return path
+	local dir = wezterm.config_dir
+	wezterm.log_error("tinty: config_dir = " .. dir)
+
+	local f = io.open(dir .. "/current_scheme", "r")
+	if f == nil then
+		wezterm.log_error("tinty: no current_scheme in config_dir")
+		return nil
+	end
+	local name = f:read("*l")
+	f:close()
+	wezterm.log_error("tinty: scheme = [" .. tostring(name) .. "]")
+	if name == nil or name == "" then
+		return nil
+	end
+
+	local path = dir .. "/colors/" .. name .. ".toml"
+	local file = io.open(path, "r")
+	if file == nil then
+		wezterm.log_error("tinty: missing file " .. path)
+		return nil
+	end
+	file:close()
+	return path
 end
 
 local theme = tinty_wezterm_theme()
+local colors = nil
 if theme ~= nil then
-  config.color_scheme_dirs = { (theme:gsub("/[^/]+$", "")) }
-  config.color_scheme = "base24-hivacruz"
+	wezterm.add_to_config_reload_watch_list(theme)
+	local ok, loaded = pcall(wezterm.color.load_scheme, theme)
+	wezterm.log_error("tinty: load ok=" .. tostring(ok) .. " type=" .. type(loaded))
+	if not ok then
+		wezterm.log_error("tinty: load error: " .. tostring(loaded))
+	end
+end
+
+if colors ~= nil then
+	config.colors = colors
 else
-  -- Embedded hivacruz palette (same values as the Linux terminal theme).
-  config.colors = {
-    foreground = "#ede4e4",
-    background = "#132638",
-    cursor_bg = "#979db4",
-    cursor_border = "#979db4",
-    cursor_fg = "#202746",
-    selection_bg = "#5e6687",
-    selection_fg = "#979db4",
-    ansi = {
-      "#202746",
-      "#c94922",
-      "#ac9739",
-      "#c08b30",
-      "#3d8fd1",
-      "#6679cc",
-      "#22a2c9",
-      "#979db4",
-    },
-    brights = {
-      "#6b7394",
-      "#c76b29",
-      "#73ad43",
-      "#5e6687",
-      "#898ea4",
-      "#dfe2f1",
-      "#9c637a",
-      "#f5f7ff",
-    },
-  }
+	-- Embedded hivacruz palette (same values as the Linux terminal theme).
+	config.colors = {
+		foreground = "#ede4e4",
+		background = "#132638",
+		cursor_bg = "#979db4",
+		cursor_border = "#979db4",
+		cursor_fg = "#202746",
+		selection_bg = "#5e6687",
+		selection_fg = "#979db4",
+		ansi = {
+			"#202746",
+			"#c94922",
+			"#ac9739",
+			"#c08b30",
+			"#3d8fd1",
+			"#6679cc",
+			"#22a2c9",
+			"#979db4",
+		},
+		brights = {
+			"#6b7394",
+			"#c76b29",
+			"#73ad43",
+			"#5e6687",
+			"#898ea4",
+			"#dfe2f1",
+			"#9c637a",
+			"#f5f7ff",
+		},
+	}
 end
 
 return config
