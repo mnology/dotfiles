@@ -1,0 +1,10 @@
+# Python libraries, not CLI tools. These are imported in code and have no
+# executable, so bootstrap.sh installs them with "uv pip install", not
+# "uv tool install".
+atlassian-python-api
+click
+click-option-group
+jira
+Markdown
+packaging>=23.2,<24
+tree-sitter

@@ -248,26 +248,43 @@ step_cargo() {
 # Install the global Python CLI tools listed in requirements.in, each in its
 # own isolated environment via "uv tool install". This avoids the dependency
 # conflicts of one shared global env. uv comes from mise (see mise config).
+# Install the global Python packages.
+#   - requirements.in      CLI tools  -> "uv tool install" (one isolated env
+#                          per tool, each shimmed onto PATH). Avoids the
+#                          dependency conflicts of one shared global env.
+#   - requirements-lib.in  libraries  -> "uv pip install --system". Libraries
+#                          have no executable, so "uv tool install" fails.
+# uv comes from mise (see the mise config).
 step_python() {
-  log "Installing global Python CLI tools (uv tool install)"
-  local req="${DOTFILES_DIR}/requirements.in"
-  if [[ ! -f "${req}" ]]; then
-    warn "no requirements.in; skipping"
-    return 0
-  fi
+  log "Installing global Python packages (uv)"
   if ! command -v uv >/dev/null 2>&1; then
     warn "uv not found (install via 'mise' step first); skipping"
     return 0
   fi
-  # One package per non-empty, non-comment line. Keep any version pin.
-  local pkg
-  while IFS= read -r pkg; do
-    pkg="${pkg%%#*}"            # strip inline comments
-    pkg="${pkg//[[:space:]]/}"  # strip whitespace
-    [[ -z "${pkg}" ]] && continue
-    run uv tool install "${pkg}"
-  done < "${req}"
-  ok "Python CLI tools installed"
+
+  # CLI tools: one isolated environment each.
+  local tools="${DOTFILES_DIR}/requirements.in"
+  if [[ -f "${tools}" ]]; then
+    local pkg
+    while IFS= read -r pkg; do
+      pkg="${pkg%%#*}"            # strip inline comments
+      pkg="${pkg//[[:space:]]/}"  # strip whitespace
+      [[ -z "${pkg}" ]] && continue
+      run uv tool install "${pkg}"
+    done < "${tools}"
+    ok "CLI tools installed"
+  else
+    warn "no requirements.in; skipping CLI tools"
+  fi
+
+  # Libraries: one shared environment via uv pip.
+  local libs="${DOTFILES_DIR}/requirements-lib.in"
+  if [[ -f "${libs}" ]]; then
+    run uv pip install --system -r "${libs}"
+    ok "libraries installed"
+  else
+    warn "no requirements-lib.in; skipping libraries"
+  fi
 }
 
 # Install the terminal (kitty) and mise if missing.
@@ -418,7 +435,7 @@ Steps (default order):
   links    symlink nvim/tmux/starship/mise/shell/tinty/kitty/prezto configs
   prezto   confirm prezto modules are vendored (zsh completion/history)
   mise     install mise (if needed) and all tools from modern/mise/config.toml
-  python   install requirements.in CLI tools in isolated envs (uv tool install)
+  python   install requirements.in CLI tools (uv tool install) and requirements-lib.in libraries (uv pip)
   cargo    install pinned cargo tools (neovide, tinty, stylua, ...)
   theme    tinty install + apply ${THEME} (regenerates kitty/shell theme)
   tmux     install tpm (tmux plugin manager)
