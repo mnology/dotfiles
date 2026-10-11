@@ -56,6 +56,7 @@ readonly -a CARGO_TOOLS=(
 # from it. prezto runcoms are linked individually (matching the current box).
 readonly -a LINKS=(
   "${HOME}/.local/bin/meld-tinty.py|${DOTFILES_DIR}/bin/meld-tinty.py"
+  "${HOME}/.local/bin/kiro-tinty.py|${DOTFILES_DIR}/bin/kiro-tinty.py"
   "${HOME}/.config/nvim|${DOTFILES_DIR}/nvim"
   "${HOME}/.config/starship.toml|${DOTFILES_DIR}/starship.toml"
   "${HOME}/.tmux.conf|${DOTFILES_DIR}/.tmux.conf"

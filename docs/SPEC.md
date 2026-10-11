@@ -140,6 +140,10 @@ tinty config (`modern/tinty/config.toml`) runs a hook per target:
 - Meld: `bin/meld-tinty.py` builds a GtkSourceView scheme from the active
   palette, writes it to `~/.local/share/gtksourceview-4/styles`, and selects it
   with gsettings.
+- Kiro IDE: the Tinted VSCode extension (`TintedTheming.base16-tinted-themes`)
+  registers one theme per scheme, with labels equal to tinty scheme ids.
+  `bin/kiro-tinty.py` writes the current scheme id into `workbench.colorTheme`
+  in the Windows Kiro settings, and the IDE live-reloads it.
 
 Platform and version notes:
 
@@ -148,6 +152,8 @@ Platform and version notes:
 - The Meld integration targets `gtksourceview-4`, the version Meld links. The
   scheme must use the runtime `name` attribute (not the `_name` gettext form)
   and set `parent-scheme="classic"`, or GtkSourceView does not load it.
+- Kiro IDE needs `window.autoDetectColorScheme` set to false, or it ignores
+  `workbench.colorTheme` and uses the preferred dark/light theme instead.
 - The WezTerm hook relies on WSL `cmd.exe` and `wslpath`. On non-WSL hosts
   `cmd.exe` is absent, so the WezTerm sync is skipped.
 

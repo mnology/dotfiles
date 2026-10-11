@@ -72,7 +72,29 @@ $Src = Join-Path $RepoRoot 'modern\wezterm\wezterm.lua'
 Copy-Item -Path $Src -Destination (Join-Path $WeztermDir 'wezterm.lua') -Force
 Write-Ok "wezterm.lua -> $WeztermDir"
 
-# 5. Remind about the WSL side.
+# 5. Kiro IDE: install the Tinted theme pack and place settings.
+#    The themes' labels equal tinty scheme ids, so `tinty apply` can drive
+#    workbench.colorTheme (see bin/kiro-tinty.py). autoDetectColorScheme must
+#    be false for colorTheme to govern.
+Write-Step 'Installing Tinted VSCode theme pack for Kiro'
+if (Get-Command kiro -ErrorAction SilentlyContinue) {
+    kiro --install-extension TintedTheming.base16-tinted-themes
+    Write-Ok 'Tinted theme pack installed'
+}
+else {
+    Write-Warn 'kiro CLI not found; install the "Tinted VSCode" extension by hand'
+}
+Write-Step 'Installing Kiro settings'
+$KiroUserDir = Join-Path $env:APPDATA 'Kiro\User'
+New-Item -ItemType Directory -Force -Path $KiroUserDir | Out-Null
+$KiroDst = Join-Path $KiroUserDir 'settings.json'
+if (Test-Path $KiroDst) {
+    Copy-Item -Path $KiroDst -Destination "$KiroDst.pre-bootstrap" -Force
+}
+Copy-Item -Path (Join-Path $RepoRoot 'modern\kiro\settings.json') -Destination $KiroDst -Force
+Write-Ok "settings.json -> $KiroUserDir"
+
+# 6. Remind about the WSL side.
 Write-Step 'Done.'
 Write-Warn 'The Linux tools run inside WSL. In your distro, run:'
 Write-Warn '  wsl --update   (from Windows, for a current WSLg)'

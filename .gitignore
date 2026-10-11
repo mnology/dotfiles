@@ -47,6 +47,7 @@ node_modules/
 # Use bin/* (not bin/) so git descends and honors the negation below.
 bin/*
 !bin/meld-tinty.py
+!bin/kiro-tinty.py
 .DS_Store
 Thumbs.db
 

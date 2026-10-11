@@ -41,4 +41,5 @@ if command -v cmd.exe >/dev/null 2>&1; then
     fi
 fi
 ~/.local/bin/meld-tinty.py
+~/.local/bin/kiro-tinty.py
 """

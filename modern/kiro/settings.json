@@ -1,0 +1,16 @@
+{
+    "kiroAgent.trust.defaultPattern": "full",
+    "kiroAgent.workflows.enabled": true,
+    "editor.fontFamily": "FiraCode Nerd Font Mono, Consolas, 'Courier New', monospace",
+    "editor.allowVariableFonts": false,
+    "chat.editor.fontFamily": "FiraMono Nerd Font ",
+    "chat.fontFamily": "FiraMono Nerd Font ",
+    "debug.console.fontFamily": "FiraCode Nerd Font Mono",
+    "scm.inputFontFamily": "editor",
+    "kiroAgent.trust.defaultScope": "user",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "workbench.colorTheme": "base24-dracula",
+    "window.autoDetectColorScheme": false,
+    "workbench.preferredDarkColorTheme": "base24-wild-cherry"
+}
