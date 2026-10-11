@@ -10,6 +10,7 @@ alias gs='git status'
 alias gl='git log --oneline --decorate --graph'
 alias gco='git checkout'
 alias gcb='git checkout -b'
+alias lg='lazygit'
 
 # tmux
 alias ta='tmux attach'

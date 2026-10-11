@@ -26,6 +26,8 @@ Windows 11 host that runs WSL.
 - Theme: tinty applies base24-hivacruz to the shell, kitty, and vivid
   (`LS_COLORS`). tmux uses the gruvbox status theme.
 - Fonts: FiraCode Nerd Font. The TTF files are in `modern/fonts/`.
+- Git TUI: lazygit (via mise). Open it with the `lg` alias, or in Neovim with
+  `<leader>gg` through snacks.
 
 ## Install
 
