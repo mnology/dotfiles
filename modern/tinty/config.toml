@@ -32,7 +32,10 @@ if command -v cmd.exe >/dev/null 2>&1; then
     WIN_PROFILE=$(wslpath "$(cmd.exe /c "echo %USERPROFILE%" 2>/dev/null | tr -d "\\r")" 2>/dev/null)
     WEZTERM_DIR="$WIN_PROFILE/.config/wezterm"
     if [ -n "$WIN_PROFILE" ] && [ -d "$SRC" ]; then
-        mkdir -p "$WEZTERM_DIR/colors" && cp "$SRC"/*.toml "$WEZTERM_DIR/colors/"
+        # Copy only the current scheme file, named by scheme id so WezTerm
+        # registers it under the name current_scheme holds. Copying all 585
+        # theme files to the Windows filesystem took ~2.7s on every shell start.
+        mkdir -p "$WEZTERM_DIR/colors" && cp "$TINTY_THEME_FILE_PATH" "$WEZTERM_DIR/colors/$TINTY_SCHEME_ID.toml"
         touch -c "$WEZTERM_DIR/wezterm.lua"
         # Use >| so the write succeeds even when zsh noclobber is set; a plain
         # > errors with "file exists" on the second apply, which breaks the
