@@ -30,6 +30,7 @@ end
 require("neovide")
 require("keymaps")
 require("integrations")
+require("kiro-changed")
 require("languages")
 require("colors")
 require("term")

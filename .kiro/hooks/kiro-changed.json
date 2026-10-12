@@ -1,0 +1,23 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Queue saved files for review",
+      "trigger": "PostFileSave",
+      "description": "Append each file the agent saves to a queue the editor opens with :KiroChanged.",
+      "action": {
+        "type": "command",
+        "command": "python3 \"$HOME/devel/personal/dotfiles/bin/kiro-queue-changed.py\""
+      }
+    },
+    {
+      "name": "Queue created files for review",
+      "trigger": "PostFileCreate",
+      "description": "Append each file the agent creates to the same review queue.",
+      "action": {
+        "type": "command",
+        "command": "python3 \"$HOME/devel/personal/dotfiles/bin/kiro-queue-changed.py\""
+      }
+    }
+  ]
+}

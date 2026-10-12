@@ -50,6 +50,7 @@ bin/*
 !bin/kiro-tinty.py
 !bin/win-sync.py
 !bin/prezto-template-diff.sh
+!bin/kiro-queue-changed.py
 .DS_Store
 Thumbs.db
 

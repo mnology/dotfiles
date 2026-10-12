@@ -24,11 +24,16 @@ alias cat='bat'
 
 if [ -n "$WSL_DISTRO_NAME" ] && command -v neovide.exe >/dev/null 2>&1; then
   # WSL: use the native Windows build, running nvim inside this distro
-  alias v='neovide.exe --wsl'
+  v() { neovide.exe --wsl "$@"; }
 elif command -v neovide >/dev/null 2>&1; then
   # plain Linux
-  alias v='neovide'
+  v() { neovide "$@"; }
 else
   # no GUI available, fall back to terminal nvim
-  alias v='nvim'
+  v() { nvim "$@"; }
 fi
+
+# vk: open the files the Kiro agent changed, then clear the queue. The
+# PostFileSave hook queues them; :KiroChanged opens and clears. Reuses v so the
+# host-aware launcher (neovide / neovide.exe --wsl / nvim) is picked once.
+vk() { v -c KiroChanged; }
