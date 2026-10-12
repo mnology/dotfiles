@@ -48,6 +48,7 @@ node_modules/
 bin/*
 !bin/meld-tinty.py
 !bin/kiro-tinty.py
+!bin/win-sync.py
 .DS_Store
 Thumbs.db
 

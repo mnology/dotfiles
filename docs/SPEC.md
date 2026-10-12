@@ -34,6 +34,21 @@ Windows 11 host that runs WSL.
 Run `bootstrap.sh` on a new Linux or WSL host. On Windows, run
 `scripts/windows/setup.ps1` first to install WezTerm and the font.
 
+## WSL <-> Windows file sync
+
+Some files must exist on the Windows side (Kiro settings, wezterm.lua) but are
+tracked in the repo on the WSL side. Symlinks across the boundary fail (Windows
+cannot follow a symlink into `\\wsl.localhost` over UNC), so the files are
+copied. `bin/win-sync.py` reads `modern/sync/win-map.toml` and copies in an
+explicit direction; there is no automatic merge:
+
+- `win-sync.py push` - repo -> Windows (what the bootstrap `winsync` step runs).
+- `win-sync.py pull` - Windows -> repo (capture edits made in a Windows app,
+  for example theme or settings changes made in the Kiro UI).
+- `win-sync.py status` - report which side differs.
+
+A differing target is backed up to `*.pre-winsync` before it is overwritten.
+
 Steps, in order: check, terminal, links, prezto, mise, python, cargo, theme,
 tmux, fonts, verify. Run `./bootstrap.sh --help` for details.
 

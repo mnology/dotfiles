@@ -1,0 +1,18 @@
+# WSL <-> Windows file sync map.
+#
+# Symlinks across the WSL/Windows boundary do not work (Windows apps cannot
+# follow a symlink into \\wsl.localhost over UNC), so these files are copied.
+# bin/win-sync.py reads this map:
+#   push    repo -> Windows  (install/bootstrap direction)
+#   pull    Windows -> repo  (capture edits made in a Windows app)
+#   status  show which side differs
+#
+# Windows targets use %APPDATA% or %USERPROFILE%, resolved via cmd.exe+wslpath.
+
+[[file]]
+repo = "modern/kiro/settings.json"
+win = "%APPDATA%/Kiro/User/settings.json"
+
+[[file]]
+repo = "modern/wezterm/wezterm.lua"
+win = "%USERPROFILE%/.config/wezterm/wezterm.lua"

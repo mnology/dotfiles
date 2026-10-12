@@ -57,6 +57,7 @@ readonly -a CARGO_TOOLS=(
 readonly -a LINKS=(
   "${HOME}/.local/bin/meld-tinty.py|${DOTFILES_DIR}/bin/meld-tinty.py"
   "${HOME}/.local/bin/kiro-tinty.py|${DOTFILES_DIR}/bin/kiro-tinty.py"
+  "${HOME}/.local/bin/win-sync.py|${DOTFILES_DIR}/bin/win-sync.py"
   "${HOME}/.config/nvim|${DOTFILES_DIR}/nvim"
   "${HOME}/.config/starship.toml|${DOTFILES_DIR}/starship.toml"
   "${HOME}/.tmux.conf|${DOTFILES_DIR}/.tmux.conf"
@@ -397,6 +398,23 @@ step_fonts() {
   esac
 }
 
+# Copy repo files to their Windows paths (WSL only). Symlinks across the
+# boundary fail, so win-sync.py copies the files in modern/sync/win-map.toml.
+# No-op off WSL or when the Windows paths do not resolve.
+step_winsync() {
+  log "Syncing files to Windows (win-sync push)"
+  if [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
+    ok "not WSL; skipping Windows sync"
+    return 0
+  fi
+  if command -v win-sync.py >/dev/null 2>&1; then
+    run win-sync.py push
+  else
+    run "${DOTFILES_DIR}/bin/win-sync.py" push
+  fi
+  ok "Windows files synced"
+}
+
 step_verify() {
   log "Verifying"
   if command -v nvim >/dev/null 2>&1; then
@@ -415,7 +433,7 @@ step_verify() {
 # --- dispatch --------------------------------------------------------------
 
 # Ordered step list and the name->function table (dispatch by data, rule 2).
-readonly -a STEP_ORDER=(check sysdeps terminal links prezto mise python cargo theme tmux fonts verify)
+readonly -a STEP_ORDER=(check sysdeps terminal links prezto mise python cargo theme tmux fonts winsync verify)
 declare -A STEPS=(
   [check]=step_check
   [sysdeps]=step_sysdeps
@@ -428,6 +446,7 @@ declare -A STEPS=(
   [theme]=step_theme
   [tmux]=step_tmux
   [fonts]=step_fonts
+  [winsync]=step_winsync
   [verify]=step_verify
 )
 readonly STEPS
@@ -452,6 +471,7 @@ Steps (default order):
   theme    tinty install + apply ${THEME} (regenerates kitty/shell theme)
   tmux     install tpm (tmux plugin manager)
   fonts    install the vendored FiraCode Nerd Font (Linux/WSL/macOS)
+  winsync  copy repo files to their Windows paths (WSL only; win-sync push)
   verify   headless nvim smoke test + report current theme
 EOF
 }
