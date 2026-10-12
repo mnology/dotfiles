@@ -54,7 +54,8 @@ readonly -a CARGO_TOOLS=(
 
 # Symlink table: "link_path|target_path". target_path lives inside the repo.
 # Order matters: mise config must be linked before the 'mise' step installs
-# from it. Our runcoms live in zsh/; zshenv stays the pristine upstream copy.
+# from it. Our runcoms, including zshenv, live in zsh/ so the prezto submodule
+# stays pristine against upstream.
 readonly -a LINKS=(
   "${HOME}/.local/bin/meld-tinty.py|${DOTFILES_DIR}/bin/meld-tinty.py"
   "${HOME}/.local/bin/kiro-tinty.py|${DOTFILES_DIR}/bin/kiro-tinty.py"
@@ -72,11 +73,12 @@ readonly -a LINKS=(
   "${HOME}/.zshrc|${DOTFILES_DIR}/zsh/zshrc"
   "${HOME}/.zpreztorc|${DOTFILES_DIR}/zsh/zpreztorc"
   "${HOME}/.zprofile|${DOTFILES_DIR}/zsh/zprofile"
-  "${HOME}/.zshenv|${DOTFILES_DIR}/prezto/runcoms/zshenv"
+  "${HOME}/.zshenv|${DOTFILES_DIR}/zsh/zshenv"
   # Git. .gitconfig needs .gitignore_global for its excludesfile setting.
   "${HOME}/.gitconfig|${DOTFILES_DIR}/.gitconfig"
   "${HOME}/.gitignore|${DOTFILES_DIR}/.gitignore"
   "${HOME}/.gitignore_global|${DOTFILES_DIR}/.gitignore_global"
+  "${HOME}/.ssh/config|${DOTFILES_DIR}/.ssh/config"
 )
 
 # --- output helpers --------------------------------------------------------
@@ -208,6 +210,18 @@ step_links() {
     link_one "${entry%%|*}" "${entry#*|}"
   done
   ok "config links in place"
+
+  # Seed the untracked local ssh host file from the committed example. The
+  # committed ~/.ssh/config Includes this; without it, ssh warns on every call.
+  local ssh_local="${HOME}/.ssh/config.local"
+  if [[ -e "${ssh_local}" ]]; then
+    ok "ssh config.local present"
+  else
+    run mkdir -p -- "${HOME}/.ssh"
+    run cp -- "${DOTFILES_DIR}/.ssh/config.local.example" "${ssh_local}"
+    run chmod 600 -- "${ssh_local}"
+    ok "seeded ssh config.local from example (edit it with your hosts)"
+  fi
 }
 
 step_prezto() {

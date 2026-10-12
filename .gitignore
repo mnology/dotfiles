@@ -74,3 +74,13 @@ temp/
 
 # win-sync backup files (local only)
 *.pre-winsync
+
+# SSH: commit only the skeleton and the example. Never the local host file,
+# keys, or known_hosts.
+.ssh/config.local
+.ssh/*_rsa
+.ssh/*_ed25519
+.ssh/*_ecdsa
+.ssh/*.pem
+.ssh/known_hosts*
+.ssh/authorized_keys

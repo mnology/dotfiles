@@ -1,0 +1,27 @@
+#
+# Defines environment variables for every shell (login, interactive, script).
+#
+# Mirrors prezto's upstream runcoms/zshenv, then adds our own env. Lives in zsh/
+# so the prezto submodule stays pristine against upstream.
+#
+
+# Ensure that a non-login, non-interactive shell has a defined environment.
+if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprofile"
+fi
+
+#
+# Temporary Files
+#
+
+# zsh uses TMPPREFIX for here-strings and here-docs. Set it in zshenv so every
+# shell gets it, not just login shells.
+if [[ -z "${TMPDIR}" ]]; then
+  export TMPDIR="/tmp/zsh-${UID}"
+fi
+
+if [[ ! -d "${TMPDIR}" ]]; then
+  mkdir -m 700 "${TMPDIR}"
+fi
+
+export TMPPREFIX="${TMPDIR%/}/zsh"
