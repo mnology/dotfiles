@@ -43,6 +43,8 @@ copied. `bin/win-sync.py` reads `modern/sync/win-map.toml` and copies in an
 explicit direction; there is no automatic merge:
 
 - `win-sync.py push` - repo -> Windows (what the bootstrap `winsync` step runs).
+  Push refuses a file when the Windows side is newer and differs, because it
+  may hold edits not yet pulled back. Run `pull`, or `push --force` to override.
 - `win-sync.py pull` - Windows -> repo (capture edits made in a Windows app,
   for example theme or settings changes made in the Kiro UI).
 - `win-sync.py status` - report which side differs.

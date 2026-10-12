@@ -94,14 +94,31 @@ def copy(src: Path, dst: Path) -> None:
     shutil.copy2(src, dst)
 
 
-def cmd_push(pairs: list[tuple[Path, Path]]) -> int:
+def cmd_push(pairs: list[tuple[Path, Path]], force: bool = False) -> int:
+    refused = 0
     for repo, win in pairs:
         if not repo.exists():
             print(f"skip (no repo file): {repo}")
             continue
+        # Refuse when the Windows file is newer and differs: it may hold edits
+        # not yet pulled back (for example a theme fix made in the Windows app).
+        # Pull to capture them, or push --force to overwrite.
+        if (
+            not force
+            and win.exists()
+            and not same(repo, win)
+            and win.stat().st_mtime > repo.stat().st_mtime
+        ):
+            print(
+                f"REFUSED {repo.name}: the Windows file is newer. Run "
+                f"'win-sync.py pull' to capture it, or 'win-sync.py push --force'.",
+                file=sys.stderr,
+            )
+            refused += 1
+            continue
         copy(repo, win)
         print(f"push {repo.name} -> {win}")
-    return 0
+    return 1 if refused > 0 else 0
 
 
 def cmd_pull(pairs: list[tuple[Path, Path]]) -> int:
@@ -132,15 +149,19 @@ def main(argv: list[str]) -> int:
     if not MAP.exists():
         print(f"no map: {MAP}", file=sys.stderr)
         return 1
+    force = "--force" in argv
+    args = [a for a in argv if a != "--force"]
     commands = {"push": cmd_push, "pull": cmd_pull, "status": cmd_status}
-    if len(argv) != 1 or argv[0] not in commands:
-        print("usage: win-sync.py {push|pull|status}", file=sys.stderr)
+    if len(args) != 1 or args[0] not in commands:
+        print("usage: win-sync.py {push [--force]|pull|status}", file=sys.stderr)
         return 2
     pairs = load_pairs()
     if not pairs:
         print("no resolvable Windows targets (not on WSL?)")
         return 0
-    return commands[argv[0]](pairs)
+    if args[0] == "push":
+        return cmd_push(pairs, force)
+    return commands[args[0]](pairs)
 
 
 if __name__ == "__main__":
