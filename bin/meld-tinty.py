@@ -297,7 +297,7 @@ def main() -> int:
         select_in_meld()
     except MeldTintyError as err:
         sys.stderr.write(f"meld-tinty: scheme written but not selected: {err}\n")
-    sys.stdout.write(f"meld scheme -> {scheme_id}\n")
+    sys.stderr.write(f"meld scheme -> {scheme_id}\n")
     return 0
 
 

@@ -5,14 +5,13 @@ return {
     priority = 1000,
     lazy = false,
     config = function()
-      -- setup() starts the live-reload watcher (live_reload defaults to true).
-      -- Without this call the watcher never runs, so Neovim does not follow
-      -- `tinty apply`. Apply after the UI attaches to avoid headless issues.
+      -- tinted-fallback owns the tinty watcher so schemes missing from the
+      -- prebuilt set fall back to YAML. Apply after the UI attaches.
       vim.api.nvim_create_autocmd("UIEnter", {
         once = true,
         callback = function()
           pcall(function()
-            require("tinted-colorscheme").setup()
+            require("tinted-fallback").start()
           end)
         end,
       })

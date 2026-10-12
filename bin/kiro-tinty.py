@@ -62,7 +62,7 @@ def main() -> int:
 
     data["workbench.colorTheme"] = scheme
     path.write_text(json.dumps(data, indent=4) + "\n", encoding="utf-8")
-    print(f"kiro theme -> {scheme}")
+    print(f"kiro theme -> {scheme}", file=sys.stderr)
     return 0
 
 
