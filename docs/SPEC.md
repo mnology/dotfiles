@@ -175,6 +175,50 @@ Platform and version notes:
 - The WezTerm hook relies on WSL `cmd.exe` and `wslpath`. On non-WSL hosts
   `cmd.exe` is absent, so the WezTerm sync is skipped.
 
+## Session handoff
+
+Dense state for resuming work in a fresh session. The git history and this file
+are the durable signal; the chat transcript is not.
+
+### Working agreement
+
+- Chat voice: caveman (terse). Code comments, docs, commit messages: ASD-STE100.
+- Check in before editing code: propose the change inline, get approval, then
+  write. Do not edit files first and let the user diff after.
+- Commits: ASD-STE100 messages, short bullets. The user approves the message,
+  then chooses amend or new, then approves the push. Never push unprompted.
+- Prefer small, reviewable commits. Stage files by name, not `git add .`.
+- Identity for commits: ejohanse@users.noreply.github.com (anonymized).
+
+### Repo and submodule layout
+
+- Main repo: git@github.com:mnology/dotfiles.git, branch master.
+- prezto is a submodule and a personal fork: git@github.com:mnology/prezto.git.
+  Runcom edits (zshrc, zprofile, zpreztorc) commit in the fork, then the main
+  repo records the submodule pointer. Two commits, one per repo.
+- Generated artifacts are not tracked; they are regenerated (tinty themes,
+  kitty include, delta config, tinty completions). bootstrap.sh regenerates
+  them.
+
+### How the theme pipeline hangs together
+
+- `tinty apply <scheme>` drives everything: shell, kitty, wezterm, tmux, nvim,
+  kiro, meld, bat, delta, fzf. See the Theme switching section.
+- nvim uses prebuilt tinted-nvim themes first, and builds any missing scheme
+  from the scheme YAML (nvim/lua/tinted-fallback.lua).
+- Windows-side files (kiro settings, wezterm.lua) are copied, not symlinked
+  (UNC limitation). bin/win-sync.py push/pull/status; push refuses to clobber a
+  newer Windows file. Run `win-sync.py pull` after editing settings in a
+  Windows app, then commit.
+
+### Open loops
+
+- prezto: merge upstream (sorin-ionescu/prezto) to pick up fixes, keeping the
+  local changes. No `upstream` remote is configured yet.
+- Scrub the old work email from pre-anonymization git history with BFG.
+- editorconfig gives 2-space on hand-edited files only; generated and
+  tool-written files keep their own indent. That is the ceiling.
+
 ## Known follow-ups
 
 - The Meld path (`gtksourceview-4`) is version-bound. A future GtkSourceView 5
