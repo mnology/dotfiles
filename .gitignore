@@ -69,3 +69,6 @@ temp/
 
 .cache/
 .git-template/
+
+# win-sync backup files (local only)
+*.pre-winsync

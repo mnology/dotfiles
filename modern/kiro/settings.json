@@ -10,7 +10,7 @@
     "kiroAgent.trust.defaultScope": "user",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
-    "workbench.colorTheme": "base24-dracula",
+    "workbench.colorTheme": "base16-pastelon-de-amarillos-dark",
     "window.autoDetectColorScheme": false,
     "workbench.preferredDarkColorTheme": "base24-wild-cherry"
 }

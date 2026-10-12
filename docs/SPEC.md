@@ -151,6 +151,7 @@ tinty config (`modern/tinty/config.toml`) runs a hook per target:
 - Neovim: the `tinted-theming/tinted-nvim` plugin follows the scheme.
 - bat and delta: both read ANSI colors, so they follow the terminal palette.
   delta is styled with ANSI slots in `.gitconfig`.
+- fzf: zshrc sources the tinted-fzf theme into FZF_DEFAULT_OPTS at shell start.
 - WezTerm: the hook copies the generated theme and writes `current_scheme`;
   `wezterm.lua` reads it and reloads. The hook derives the Windows profile from
   `cmd.exe`, so it works for any user.

@@ -20,25 +20,12 @@
 [delta]
   navigate = true
   line-numbers = true
-  syntax-theme = ansi
+  hyperlinks = true
+  tabs = 2
 
-  # no background tint on whole lines (ANSI has no subtle dark red/green);
-  # only the changed words get a solid ANSI background
-  minus-style = syntax
-  plus-style = syntax
-  minus-emph-style = 0 1 bold
-  plus-emph-style = 0 2 bold
-
-  line-numbers-minus-style = 1
-  line-numbers-plus-style = 2
-  line-numbers-zero-style = 8
-  line-numbers-left-style = 8
-  line-numbers-right-style = 8
-
-  file-style = 4 bold
-  file-decoration-style = 4 ul
-  hunk-header-style = syntax
-  hunk-header-decoration-style = 8 box
+# Theme-related delta config generated per scheme by the tinty hook.
+[include]
+  path = ~/.local/share/tinted-theming/tinty/tinted-delta-configs-file.gitconfig
 
 [alias]
   # Short daily commands.

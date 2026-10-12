@@ -353,7 +353,15 @@ step_theme() {
   fi
   run tinty install
   run tinty apply "${THEME}"
-  ok "theme applied; kitty/shell artifacts regenerated"
+  # Generate zsh completions from the installed tinty (not tracked; regenerated
+  # here so they match the installed version). zshrc sources this path.
+  run mkdir -p -- "${HOME}/.config/shell"
+  if [[ "${DRY_RUN}" == "1" ]]; then
+    printf '    [dry-run] tinty generate-completion zsh > ~/.config/shell/tinty-completion.zsh\n'
+  else
+    tinty generate-completion zsh >"${HOME}/.config/shell/tinty-completion.zsh"
+  fi
+  ok "theme applied; completions generated; kitty/shell artifacts regenerated"
 }
 
 # Install tmux plugin manager so the tinted-tmux status theme can load.
