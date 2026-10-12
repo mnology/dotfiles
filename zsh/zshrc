@@ -1,0 +1,71 @@
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/tmp/google-cloud-sdk/path.zsh.inc' ]; then
+  . '/tmp/google-cloud-sdk/path.zsh.inc'
+fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/tmp/google-cloud-sdk/completion.zsh.inc' ]; then
+  . '/tmp/google-cloud-sdk/completion.zsh.inc'
+fi
+
+# shell integrations
+eval "$(zoxide init zsh)"
+eval "$(atuin init zsh)"
+eval "$(direnv hook zsh)"
+
+# tinty shell theming. Wrap tinty so apply/init sources the generated *.sh
+# theme scripts (fzf colors, shell ANSI) into THIS shell session, not just at
+# startup. Shell sub-processes cannot export back to the parent, so the wrapper
+# sources any theme script newer than a marker after each apply/init.
+tinty_source_shell_theme() {
+  local newer_file
+  newer_file=$(mktemp)
+  tinty "$@"
+  local subcommand="$1"
+  if [ "$subcommand" = "apply" ] || [ "$subcommand" = "init" ]; then
+    local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
+    local script
+    while read -r script; do
+      . "$script"
+    done < <(find "$data_dir" -maxdepth 1 \( -type f -o -type l \) -name "*.sh" -newer "$newer_file")
+    rm -f "$newer_file"
+  fi
+}
+
+if command -v tinty >/dev/null 2>&1; then
+  # Source the current scheme's shell colors directly. "tinty init" reruns
+  # every hook (wezterm, meld, kiro) per shell: slow and already applied.
+  _tinty_data="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
+  _tinty_cur=$(cat "$_tinty_data/artifacts/current_scheme" 2>/dev/null)
+  _tinty_sh="$_tinty_data/repos/tinted-shell/scripts/$_tinty_cur.sh"
+  [ -r "$_tinty_sh" ] && . "$_tinty_sh"
+  unset _tinty_data _tinty_cur _tinty_sh
+  alias tinty=tinty_source_shell_theme
+fi
+
+# tinty completions (binds to the word tinty; works through the alias)
+[ -r "$HOME/.config/shell/tinty-completion.zsh" ] &&
+  . "$HOME/.config/shell/tinty-completion.zsh"
+
+# prompt
+eval "$(starship init zsh)"
+
+# aliases/functions
+for f in ~/.config/shell/*.sh; do
+  [[ -r "$f" ]] && source "$f"
+done
+
+export LS_COLORS="$(vivid generate ansi)"
+export EDITOR="v"
+
+# bat as the themed pager and file viewer. BAT_THEME follows tinty via the
+# shell ANSI colors (base16-256). --plain drops line numbers for pager use.
+export BAT_THEME="base16-256"
+export PAGER="bat --plain --paging=always"
+export MANPAGER="sh -c 'col -bx | bat --language=man --plain --paging=always'"
+export MANROFFOPT="-c"

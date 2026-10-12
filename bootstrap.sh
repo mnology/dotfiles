@@ -19,7 +19,8 @@
 #   - vivid          LS_COLORS for eza/ls
 #
 # All shell hooks (mise/zoxide/atuin/direnv/tinty/starship) live in
-# prezto/runcoms/zshrc, which this script symlinks into place.
+# zsh/zshrc, which this script symlinks into place. The prezto submodule
+# tracks upstream; our runcoms live in zsh/ to stay free of merge conflicts.
 #
 # Style: see ~/.kiro/steering/engineering-style.md (Bash section) -
 #   strict mode, quoted expansions, printf over echo, case dispatch, an
@@ -53,7 +54,7 @@ readonly -a CARGO_TOOLS=(
 
 # Symlink table: "link_path|target_path". target_path lives inside the repo.
 # Order matters: mise config must be linked before the 'mise' step installs
-# from it. prezto runcoms are linked individually (matching the current box).
+# from it. Our runcoms live in zsh/; zshenv stays the pristine upstream copy.
 readonly -a LINKS=(
   "${HOME}/.local/bin/meld-tinty.py|${DOTFILES_DIR}/bin/meld-tinty.py"
   "${HOME}/.local/bin/kiro-tinty.py|${DOTFILES_DIR}/bin/kiro-tinty.py"
@@ -68,9 +69,9 @@ readonly -a LINKS=(
   "${HOME}/.config/kitty/kitty.conf|${DOTFILES_DIR}/modern/kitty/kitty.conf"
   "${HOME}/.config/kitty/theme.conf|${DOTFILES_DIR}/modern/kitty/theme.conf"
   "${HOME}/.zprezto|${DOTFILES_DIR}/prezto"
-  "${HOME}/.zshrc|${DOTFILES_DIR}/prezto/runcoms/zshrc"
-  "${HOME}/.zpreztorc|${DOTFILES_DIR}/prezto/runcoms/zpreztorc"
-  "${HOME}/.zprofile|${DOTFILES_DIR}/prezto/runcoms/zprofile"
+  "${HOME}/.zshrc|${DOTFILES_DIR}/zsh/zshrc"
+  "${HOME}/.zpreztorc|${DOTFILES_DIR}/zsh/zpreztorc"
+  "${HOME}/.zprofile|${DOTFILES_DIR}/zsh/zprofile"
   "${HOME}/.zshenv|${DOTFILES_DIR}/prezto/runcoms/zshenv"
   # Git. .gitconfig needs .gitignore_global for its excludesfile setting.
   "${HOME}/.gitconfig|${DOTFILES_DIR}/.gitconfig"

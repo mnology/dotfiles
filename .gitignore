@@ -49,6 +49,7 @@ bin/*
 !bin/meld-tinty.py
 !bin/kiro-tinty.py
 !bin/win-sync.py
+!bin/prezto-template-diff.sh
 .DS_Store
 Thumbs.db
 
