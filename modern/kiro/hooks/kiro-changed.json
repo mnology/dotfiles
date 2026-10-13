@@ -7,7 +7,7 @@
       "description": "Append each file the agent saves to a queue the editor opens with :KiroChanged.",
       "action": {
         "type": "command",
-        "command": "python3 \"$HOME/devel/personal/dotfiles/bin/kiro-queue-changed.py\""
+        "command": "kiro-queue-changed.py"
       }
     },
     {
@@ -16,7 +16,7 @@
       "description": "Append each file the agent creates to the same review queue.",
       "action": {
         "type": "command",
-        "command": "python3 \"$HOME/devel/personal/dotfiles/bin/kiro-queue-changed.py\""
+        "command": "kiro-queue-changed.py"
       }
     },
     {
@@ -25,7 +25,7 @@
       "description": "At end of turn, if the review queue is non-empty, launch the editor on the changed files. The launcher runs :KiroChanged, which opens and clears the queue.",
       "action": {
         "type": "command",
-        "command": "queue=\"${XDG_CACHE_HOME:-$HOME/.cache}/kiro/changed-files\"; [ -s \"$queue\" ] && grep -q '[^[:space:]]' \"$queue\" && exec \"$HOME/devel/personal/dotfiles/bin/kiro-open-editor.sh\" || exit 0"
+        "command": "queue=\"${XDG_CACHE_HOME:-$HOME/.cache}/kiro/changed-files\"; [ -s \"$queue\" ] && grep -q '[^[:space:]]' \"$queue\" && exec kiro-open-editor.sh || exit 0"
       }
     }
   ]

@@ -277,15 +277,33 @@ It runs in the tinty hook chain next to `meld-tinty.py` and `kiro-tinty.py`.
 The agent queues every file it saves or creates and the editor opens them for a
 pass. The flow is pull, not push: nothing launches the editor mid-turn.
 
-- `.kiro/hooks/kiro-changed.json`: PostFileSave and PostFileCreate run
-  `bin/kiro-queue-changed.py`, which appends the changed path to
-  `~/.cache/kiro/changed-files`. A Stop hook runs `bin/kiro-open-editor.sh` at
-  the end of a turn when the queue is non-empty.
+- Global hook at `~/.kiro/hooks/kiro-changed.json` (user-level, not in any
+  repo workspace), so it fires for every Kiro session regardless of workspace.
+  It is tracked in the repo at `modern/kiro/hooks/kiro-changed.json` and
+  bootstrap symlinks it into `~/.kiro/hooks/`. PostFileSave and PostFileCreate
+  run `kiro-queue-changed.py`, which appends the changed path to
+  `~/.cache/kiro/changed-files`. A Stop hook runs `kiro-open-editor.sh` at the
+  end of a turn when the queue is non-empty.
+- The hook calls the scripts by their `~/.local/bin` symlinks, not the repo
+  path, so it is not coupled to where the dotfiles repo lives. bootstrap links
+  both scripts into `~/.local/bin`.
 - `bin/kiro-open-editor.sh`: the single host-aware launcher (neovide.exe --wsl
   on WSL, neovide on Linux, else nvim). It runs `:KiroChanged`. `vk` in
   `modern/shell/aliases.sh` calls the same script.
 - `nvim/lua/kiro-changed.lua`: defines `:KiroChanged`, which opens the queued
   files and clears the queue, so each review starts fresh.
+
+Platform notes (WSL + Windows Kiro IDE):
+
+- Hooks live on the WSL side and run in WSL. The Kiro IDE on Windows opens this
+  repo over Remote-WSL (the `open-remote-wsl` extension, backend in
+  `~/.kiro-server`), so a hook command for a WSL workspace executes inside WSL,
+  with WSL paths and tools. The WSL CLI and the Remote-WSL IDE share this.
+- The global hook location is confirmed for the WSL CLI (`~/.kiro/hooks/`). The
+  IDE's pickup of user-global hooks over Remote-WSL is not documented offline
+  and must be confirmed by testing in a non-dotfiles WSL workspace. If the IDE
+  does not pick up the global hook, place a copy per workspace in that repo's
+  `.kiro/hooks/`.
 
 ## SSH config
 
