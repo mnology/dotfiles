@@ -18,6 +18,15 @@
         "type": "command",
         "command": "python3 \"$HOME/devel/personal/dotfiles/bin/kiro-queue-changed.py\""
       }
+    },
+    {
+      "name": "Open changed files when the turn ends",
+      "trigger": "Stop",
+      "description": "At end of turn, if the review queue is non-empty, launch the editor on the changed files. The launcher runs :KiroChanged, which opens and clears the queue.",
+      "action": {
+        "type": "command",
+        "command": "queue=\"${XDG_CACHE_HOME:-$HOME/.cache}/kiro/changed-files\"; [ -s \"$queue\" ] && grep -q '[^[:space:]]' \"$queue\" && exec \"$HOME/devel/personal/dotfiles/bin/kiro-open-editor.sh\" || exit 0"
+      }
     }
   ]
 }

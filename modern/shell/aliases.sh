@@ -26,7 +26,7 @@ if [ -n "$WSL_DISTRO_NAME" ] && command -v neovide.exe >/dev/null 2>&1; then
   # WSL: use the native Windows build, running nvim inside this distro
   v() { neovide.exe --wsl "$@"; }
 elif command -v neovide >/dev/null 2>&1; then
-  # plain Linux
+  # plain Linux GUI
   v() { neovide "$@"; }
 else
   # no GUI available, fall back to terminal nvim
@@ -34,6 +34,7 @@ else
 fi
 
 # vk: open the files the Kiro agent changed, then clear the queue. The
-# PostFileSave hook queues them; :KiroChanged opens and clears. Reuses v so the
-# host-aware launcher (neovide / neovide.exe --wsl / nvim) is picked once.
-vk() { v -c KiroChanged; }
+# PostFileSave hook queues them; :KiroChanged opens and clears. Both vk and the
+# Stop hook call the same launcher script, so the host-aware backend choice and
+# the neovide `--` arg-forwarding quirk live in one place.
+vk() { "$HOME/devel/personal/dotfiles/bin/kiro-open-editor.sh"; }

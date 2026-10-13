@@ -51,6 +51,7 @@ bin/*
 !bin/win-sync.py
 !bin/prezto-template-diff.sh
 !bin/kiro-queue-changed.py
+!bin/kiro-open-editor.sh
 .DS_Store
 Thumbs.db
 
