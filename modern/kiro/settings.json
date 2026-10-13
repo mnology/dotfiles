@@ -1,5 +1,5 @@
 {
-    "kiroAgent.trust.defaultPattern": "full",
+    "kiroAgent.trust.defaultPattern": "partial",
     "kiroAgent.workflows.enabled": true,
     "editor.fontFamily": "FiraCode Nerd Font Mono, Consolas, 'Courier New', monospace",
     "editor.allowVariableFonts": false,
@@ -10,7 +10,7 @@
     "kiroAgent.trust.defaultScope": "user",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
-    "workbench.colorTheme": "base16-pastelon-de-amarillos-dark",
+    "workbench.colorTheme": "base16-soft-server",
     "window.autoDetectColorScheme": false,
     "workbench.preferredDarkColorTheme": "base24-wild-cherry"
 }
