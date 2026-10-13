@@ -20,11 +20,15 @@ Windows 11 host that runs WSL.
   `modern/mise/config.toml`.
 - cargo: tools that mise does not provide (neovide, tinty, stylua,
   tree-sitter, autohide-tdrop).
-- prezto: zsh completion, history search, and editor key bindings.
-- Shell hooks (in `prezto/runcoms/zshrc`): mise, zoxide, atuin, direnv, tinty,
-  and starship.
-- Theme: tinty applies base24-hivacruz to the shell, kitty, and vivid
-  (`LS_COLORS`). tmux uses the gruvbox status theme.
+- prezto: zsh completion, history search, and editor key bindings. prezto is
+  the pristine upstream submodule; our runcoms live in `zsh/` (zshenv, zprofile,
+  zshrc, zpreztorc) and symlink into `$HOME`, so upstream pulls never conflict.
+- Shell hooks (in `zsh/zshrc`): mise, zoxide, atuin, direnv, tinty, and
+  starship.
+- Theme: tinty applies the scheme to the shell, kitty, vivid (`LS_COLORS`), the
+  starship prompt, and the tmux status bar. The starship prompt and tmux status
+  colors are derived from the active scheme by `bin/starship-tinty.py`; they
+  adapt to any base16 or base24 theme. See "Adaptive prompt and status theming".
 - Fonts: FiraCode Nerd Font. The TTF files are in `modern/fonts/`.
 - Git TUI: lazygit (via mise). Open it with the `lg` alias, or in Neovim with
   `<leader>gg` through snacks.
@@ -99,7 +103,8 @@ starship, tombi, zoxide.
 
 - Added `@continuum-restore 'on'` so tmux-continuum restores the last session
   on start.
-- The gruvbox status theme is the single tmux theme.
+- The status bar is theme-adaptive, not a fixed theme. See "Adaptive prompt and
+  status theming".
 
 ## System prerequisites (Debian / Ubuntu / WSL)
 
@@ -175,6 +180,124 @@ Platform and version notes:
 - The WezTerm hook relies on WSL `cmd.exe` and `wslpath`. On non-WSL hosts
   `cmd.exe` is absent, so the WezTerm sync is skipped.
 
+## Adaptive prompt and status theming
+
+`bin/starship-tinty.py` is a tinty hook. On every `tinty apply` it reads the
+active scheme and generates the starship prompt palette and the tmux status
+colors from it, so both adapt to any base16 or base24 scheme and stay legible.
+It runs in the tinty hook chain next to `meld-tinty.py` and `kiro-tinty.py`.
+
+### Data source
+
+- The script derives the scheme from `tinty current`, not from the hook's
+  `TINTY_THEME_FILE_PATH`. That variable points at the chaining item's theme
+  file (a wezterm `.toml`), not the shell palette, so it is the wrong source.
+- It parses the tinted-shell script (`.../tinted-shell/scripts/<scheme>.sh`),
+  which exposes every base role as `colorNN="RR/GG/BB"` for both base16 and
+  base24, and maps those to `base00`-`base0f`.
+
+### Color selection (both prompt and status share one selection)
+
+- Candidate accents are `base08`-`base0e` (the hue-bearing roles).
+- Rank by saturation (the palette designer's emphasis), skip near-duplicate
+  hues (within 25 degrees), take the top four, then order those by hue so the
+  bar sweeps the wheel. Saturation is used as-is, so a pastel scheme yields a
+  pastel bar.
+- Each segment foreground is the dark or light base that has the higher WCAG
+  contrast against that segment background, so text is legible on a light or a
+  dark accent.
+
+### starship
+
+- `starship.toml` is a TEMPLATE with a sentinel block
+  (`# >>> TINTY PALETTE >>>` ... `# <<< TINTY PALETTE <<<`). The generator
+  rewrites the block and writes the result to `$STARSHIP_CONFIG`
+  (`~/.config/starship.generated.toml`), which starship reads. The template
+  stays tracked and pristine; the live file is generated and untracked.
+- `zsh/zshrc` exports `STARSHIP_CONFIG` before `starship init`.
+- Palette keys are emitted lowercase. starship lowercases a `bg:`/`fg:`
+  reference when it resolves it but stores palette keys case-sensitively, so an
+  uppercase key like `base0A` never matches and the color silently drops.
+- Foreground keys are named `ink_*`, never `fg_on_base0A`. starship resolves a
+  palette value that references another palette key, so a name containing
+  `base0A` is read as a reference to `base0A` and the style silently drops.
+- The hue segments reference stable `seg1`-`seg4` aliases; the generator decides
+  which accents fill them. The template keeps the Nerd Font pills.
+
+### tmux status
+
+- The generator also emits `~/.config/tmux/tinty-colors.conf`, a fragment of
+  `@tinty_*` user options, from the same selection. `modern/tmux/status.conf`
+  sources it and reloads the running server. Prompt and status use one palette.
+- Semantic roles: session = seg1, host = seg2, current window = seg4 (the
+  attention pill), activity = seg3. The clock is a recessed neutral pill, not
+  an accent.
+- Three depth levels keep the bar distinct from the terminal:
+  terminal background (base00), a distinct bar surface (`@tinty_bar_bg` =
+  base03, about 1.5:1 against base00), and a recessed clock pill
+  (`@tinty_clock_bg` = base01). base01 alone is too close to base00 and makes
+  the bar vanish, so the bar surface and the clock pill are separate roles.
+- Shape: rounded caps at the far ends, solid powerline arrows between pills, a
+  solid arrow (`@tinty_divider` = base05) leads each inactive tab, and thin
+  arrows mark window list overflow. The current window is a filled accent pill
+  with its own caps (left-pointing to open, right-pointing to close); it stands
+  out by background, not just foreground. Activity windows switch to the seg3
+  background and bold.
+- Traps:
+  - A separator string colour is overridden by the push/pop-default wrapping in
+    `status-format[0]`, so a coloured `window-status-separator` renders black.
+    The divider arrow is therefore baked into `window-status-format` (where an
+    inline `#[fg]` applies), and the separator is empty. Every inactive tab,
+    including the first, leads with the arrow. Suppressing it only on window 1
+    was tried and dropped: nesting a comma-bearing `#[fg=,bg=]` inside a
+    `#{?...}` branch breaks the tmux conditional parser and leaks literal text.
+  - `window-status-activity-style` loses to the inline colours in
+    `window-status-format`, so activity colours are baked into the format with a
+    `#{?window_activity_flag,...}` conditional, not left to the style.
+  - Current-window caps live in `window-status-current-format`, not the
+    separator, for the same inline-colour reason.
+  - Overflow markers are set by overriding `status-format[0]` (based on the
+    tmux 3.6 default), replacing the literal `<`/`>` markers.
+- Truecolor: tmux must advertise RGB or Tc for the client terminal, or the
+  status colours downsample and can collapse to black. `.tmux.conf` sets both
+  `terminal-features ...:RGB` and a `terminal-overrides ...:Tc` fallback for
+  xterm-kitty and xterm-256color (WezTerm reports xterm-256color). The client
+  reads this at attach, so a running client needs a detach/reattach, or
+  `tmux kill-server`, to pick up a change.
+
+### Notes and traps
+
+- The tmux reload in the hook is best-effort: it is a no-op when no server runs,
+  so it never breaks the apply chain.
+- The generator refuses to write a path that resolves to the tracked template,
+  so a stale symlink cannot clobber the template.
+
+## Agent file-change review
+
+The agent queues every file it saves or creates and the editor opens them for a
+pass. The flow is pull, not push: nothing launches the editor mid-turn.
+
+- `.kiro/hooks/kiro-changed.json`: PostFileSave and PostFileCreate run
+  `bin/kiro-queue-changed.py`, which appends the changed path to
+  `~/.cache/kiro/changed-files`. A Stop hook runs `bin/kiro-open-editor.sh` at
+  the end of a turn when the queue is non-empty.
+- `bin/kiro-open-editor.sh`: the single host-aware launcher (neovide.exe --wsl
+  on WSL, neovide on Linux, else nvim). It runs `:KiroChanged`. `vk` in
+  `modern/shell/aliases.sh` calls the same script.
+- `nvim/lua/kiro-changed.lua`: defines `:KiroChanged`, which opens the queued
+  files and clears the queue, so each review starts fresh.
+
+## SSH config
+
+- `~/.ssh/config` is a committed skeleton: global `Host *` defaults
+  (`AddKeysToAgent yes`, `IdentitiesOnly yes`, `ForwardX11 no`, keepalive) and
+  an `Include ~/.ssh/config.local` first. Include is first because ssh uses the
+  first value found for each option, so local host blocks override the globals.
+- All host entries and keys live in the untracked `~/.ssh/config.local`.
+  `.ssh/config.local.example` is the committed template; bootstrap seeds the
+  local file from it. `.gitignore` excludes the local file, private keys,
+  `known_hosts`, and `authorized_keys`.
+
 ## Session handoff
 
 Dense state for resuming work in a fresh session. The git history and this file
@@ -193,9 +316,11 @@ are the durable signal; the chat transcript is not.
 ### Repo and submodule layout
 
 - Main repo: git@github.com:mnology/dotfiles.git, branch master.
-- prezto is a submodule and a personal fork: git@github.com:mnology/prezto.git.
-  Runcom edits (zshrc, zprofile, zpreztorc) commit in the fork, then the main
-  repo records the submodule pointer. Two commits, one per repo.
+- prezto is the pristine upstream submodule (sorin-ionescu/prezto.git). Runcom
+  edits do NOT go in the submodule: our runcoms live in `zsh/` (zshenv,
+  zprofile, zshrc, zpreztorc) and symlink into `$HOME`. bootstrap links
+  `~/.zshenv` to `zsh/zshenv`, not to the prezto copy. One commit, in the main
+  repo. Pulling prezto upstream never conflicts with our runcoms.
 - Generated artifacts are not tracked; they are regenerated (tinty themes,
   kitty include, delta config, tinty completions). bootstrap.sh regenerates
   them.
@@ -203,7 +328,13 @@ are the durable signal; the chat transcript is not.
 ### How the theme pipeline hangs together
 
 - `tinty apply <scheme>` drives everything: shell, kitty, wezterm, tmux, nvim,
-  kiro, meld, bat, delta, fzf. See the Theme switching section.
+  kiro, meld, bat, delta, fzf, the starship prompt, and the tmux status bar.
+  See the Theme switching and "Adaptive prompt and status theming" sections.
+- The starship prompt and tmux status colors are generated per scheme by
+  `bin/starship-tinty.py` (adaptive, saturation-ranked accents, WCAG-legible
+  foregrounds). The prompt reads `$STARSHIP_CONFIG`
+  (`~/.config/starship.generated.toml`, untracked); the status reads
+  `~/.config/tmux/tinty-colors.conf` (untracked). Both are regenerated.
 - nvim uses prebuilt tinted-nvim themes first, and builds any missing scheme
   from the scheme YAML (nvim/lua/tinted-fallback.lua).
 - Windows-side files (kiro settings, wezterm.lua) are copied, not symlinked
@@ -213,8 +344,6 @@ are the durable signal; the chat transcript is not.
 
 ### Open loops
 
-- prezto: merge upstream (sorin-ionescu/prezto) to pick up fixes, keeping the
-  local changes. No `upstream` remote is configured yet.
 - Scrub the old work email from pre-anonymization git history with BFG.
 - editorconfig gives 2-space on hand-edited files only; generated and
   tool-written files keep their own indent. That is the ceiling.

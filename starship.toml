@@ -1,15 +1,22 @@
 "$schema" = "https://starship.rs/config-schema.json"
 
+# This file is a TEMPLATE. bin/starship-tinty.py regenerates the palette block
+# below on every `tinty apply` and writes the result to $STARSHIP_CONFIG (the
+# live, untracked config starship reads). Segments reference base roles, so the
+# bar flows with any base16/base24 scheme. Per-segment foregrounds (ink_*) are
+# resolved by WCAG contrast, so text stays legible on light or dark segment
+# backgrounds. Edit structure here; never edit the live file.
+
 format = """
-[](color_orange)\
+[](seg1)\
 $os\
 $username\
-[](bg:color_yellow fg:color_orange)\
+[](bg:seg2 fg:seg1)\
 $directory\
-[](fg:color_yellow bg:color_aqua)\
+[](fg:seg2 bg:seg3)\
 $git_branch\
 $git_status\
-[](fg:color_aqua bg:color_blue)\
+[](fg:seg3 bg:seg4)\
 $c\
 $rust\
 $golang\
@@ -19,31 +26,53 @@ $java\
 $kotlin\
 $haskell\
 $python\
-[](fg:color_blue bg:color_bg3)\
+[](fg:seg4 bg:base01)\
 $docker_context\
 $conda\
-[](fg:color_bg3 bg:color_bg1)\
+[](fg:base01 bg:base00)\
 $time\
-[ ](fg:color_bg1)\
+[ ](fg:base00)\
 $line_break$character"""
 
-palette = "gruvbox_dark"
+palette = "base24"
 
-[palettes.gruvbox_dark]
-color_fg0 = "bright-white"
-color_bg1 = "black"
-color_bg3 = "bright-black"
-color_blue = "blue"
-color_aqua = "cyan"
-color_green = "green"
-color_orange = "bright-red"
-color_purple = "purple"
-color_red = "red"
-color_yellow = "yellow"
+# >>> TINTY PALETTE >>>
+[palettes.base24]
+# Default values (base24 tokyo-night-moon-ish). Overwritten per scheme by
+# bin/starship-tinty.py: base roles come from the scheme; seg1-4 are the
+# hue-bearing bar segments the generator picks from the scheme's accents by
+# saturation; ink_* are contrast-picked foregrounds. Do not hand-edit.
+base00 = "#222436"
+base01 = "#1e2030"
+base02 = "#2d3f76"
+base03 = "#3b4261"
+base04 = "#636da6"
+base05 = "#828bb8"
+base06 = "#aeb4d1"
+base07 = "#c8d3f5"
+base08 = "#ff757f"
+base09 = "#ffc777"
+base0a = "#ffdf77"
+base0b = "#c3e88d"
+base0c = "#86e1fc"
+base0d = "#82aaff"
+base0e = "#fca7ea"
+base0f = "#c53b53"
+seg1 = "#ffc777"
+ink_seg1 = "#222436"
+seg2 = "#ffdf77"
+ink_seg2 = "#222436"
+seg3 = "#86e1fc"
+ink_seg3 = "#222436"
+seg4 = "#82aaff"
+ink_seg4 = "#222436"
+ink_tool = "#c8d3f5"
+ink_time = "#c8d3f5"
+# <<< TINTY PALETTE <<<
 
 [os]
 disabled = false
-style = "bg:color_orange fg:color_fg0"
+style = "bg:seg1 fg:ink_seg1"
 
 [os.symbols]
 Windows = "󰍲"
@@ -70,12 +99,12 @@ Pop = ""
 
 [username]
 show_always = true
-style_user = "bg:color_orange fg:color_fg0"
-style_root = "bg:color_orange fg:color_fg0"
+style_user = "bg:seg1 fg:ink_seg1"
+style_root = "bg:seg1 fg:ink_seg1"
 format = "[ $user ]($style)"
 
 [directory]
-style = "fg:color_fg0 bg:color_yellow"
+style = "fg:ink_seg2 bg:seg2"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
@@ -89,81 +118,81 @@ truncation_symbol = "…/"
 
 [git_branch]
 symbol = ""
-style = "bg:color_aqua"
-format = "[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)"
+style = "bg:seg3"
+format = "[[ $symbol $branch ](fg:ink_seg3 bg:seg3)]($style)"
 
 [git_status]
-style = "bg:color_aqua"
-format = "[[($all_status$ahead_behind )](fg:color_fg0 bg:color_aqua)]($style)"
+style = "bg:seg3"
+format = "[[($all_status$ahead_behind )](fg:ink_seg3 bg:seg3)]($style)"
 
 [nodejs]
 symbol = ""
-style = "bg:color_blue"
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)"
+style = "bg:seg4"
+format = "[[ $symbol( $version) ](fg:ink_seg4 bg:seg4)]($style)"
 
 [c]
 symbol = " "
-style = "bg:color_blue"
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)"
+style = "bg:seg4"
+format = "[[ $symbol( $version) ](fg:ink_seg4 bg:seg4)]($style)"
 
 [rust]
 symbol = ""
-style = "bg:color_blue"
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)"
+style = "bg:seg4"
+format = "[[ $symbol( $version) ](fg:ink_seg4 bg:seg4)]($style)"
 
 [golang]
 symbol = ""
-style = "bg:color_blue"
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)"
+style = "bg:seg4"
+format = "[[ $symbol( $version) ](fg:ink_seg4 bg:seg4)]($style)"
 
 [php]
 symbol = ""
-style = "bg:color_blue"
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)"
+style = "bg:seg4"
+format = "[[ $symbol( $version) ](fg:ink_seg4 bg:seg4)]($style)"
 
 [java]
 symbol = ""
-style = "bg:color_blue"
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)"
+style = "bg:seg4"
+format = "[[ $symbol( $version) ](fg:ink_seg4 bg:seg4)]($style)"
 
 [kotlin]
 symbol = ""
-style = "bg:color_blue"
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)"
+style = "bg:seg4"
+format = "[[ $symbol( $version) ](fg:ink_seg4 bg:seg4)]($style)"
 
 [haskell]
 symbol = ""
-style = "bg:color_blue"
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)"
+style = "bg:seg4"
+format = "[[ $symbol( $version) ](fg:ink_seg4 bg:seg4)]($style)"
 
 [python]
 symbol = ""
-style = "bg:color_blue"
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)"
+style = "bg:seg4"
+format = "[[ $symbol( $version) ](fg:ink_seg4 bg:seg4)]($style)"
 
 [docker_context]
 symbol = ""
-style = "bg:color_bg3"
-format = "[[ $symbol( $context) ](fg:bright-blue bg:color_bg3)]($style)"
+style = "bg:base01"
+format = "[[ $symbol( $context) ](fg:bright-blue bg:base01)]($style)"
 
 [conda]
-style = "bg:color_bg3"
-format = "[[ $symbol( $environment) ](fg:bright-blue bg:color_bg3)]($style)"
+style = "bg:base01"
+format = "[[ $symbol( $environment) ](fg:bright-blue bg:base01)]($style)"
 
 [time]
 disabled = false
 time_format = "%R"
-style = "bg:color_bg1"
-format = "[[  $time ](fg:color_fg0 bg:color_bg1)]($style)"
+style = "bg:base00"
+format = "[[  $time ](fg:ink_time bg:base00)]($style)"
 
 [line_break]
 disabled = false
 
 [character]
 disabled = false
-success_symbol = "[](bold fg:color_green)"
-error_symbol = "[](bold fg:color_red)"
-vimcmd_symbol = "[](bold fg:color_green)"
-vimcmd_replace_one_symbol = "[](bold fg:color_purple)"
-vimcmd_replace_symbol = "[](bold fg:color_purple)"
-vimcmd_visual_symbol = "[](bold fg:color_yellow)"
+success_symbol = "[](bold fg:base0b)"
+error_symbol = "[](bold fg:base08)"
+vimcmd_symbol = "[](bold fg:base0b)"
+vimcmd_replace_one_symbol = "[](bold fg:base0e)"
+vimcmd_replace_symbol = "[](bold fg:base0e)"
+vimcmd_visual_symbol = "[](bold fg:seg2)"

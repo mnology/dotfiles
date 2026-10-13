@@ -52,6 +52,7 @@ bin/*
 !bin/prezto-template-diff.sh
 !bin/kiro-queue-changed.py
 !bin/kiro-open-editor.sh
+!bin/starship-tinty.py
 .DS_Store
 Thumbs.db
 

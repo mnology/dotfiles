@@ -15,7 +15,9 @@ eval "$(direnv hook zsh)"
 tinty_source_shell_theme() {
   local newer_file
   newer_file=$(mktemp)
-  tinty "$@"
+  # `command` bypasses this alias/function, or the inner call re-enters the
+  # wrapper and recurses until FUNCNEST aborts (breaking every `tinty apply`).
+  command tinty "$@"
   local subcommand="$1"
   if [ "$subcommand" = "apply" ] || [ "$subcommand" = "init" ]; then
     local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
@@ -33,7 +35,14 @@ if command -v tinty >/dev/null 2>&1; then
   _tinty_data="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
   _tinty_cur=$(cat "$_tinty_data/artifacts/current_scheme" 2>/dev/null)
   _tinty_sh="$_tinty_data/repos/tinted-shell/scripts/$_tinty_cur.sh"
-  [ -r "$_tinty_sh" ] && . "$_tinty_sh"
+  # Skip inside tmux/screen. The tinted-shell script picks a tmux DCS-passthrough
+  # branch when $TMUX is set or $TERM is tmux/screen, emitting `\ePtmux;...\e\`
+  # wrappers. Those reach kitty raw and fail to parse (Unknown DCS escape code:
+  # tmux;), so the palette remap silently breaks. The multiplexer owns the
+  # palette inside tmux; the shell must not fight it.
+  if [[ -z "$TMUX" && "$TERM" != tmux* && "$TERM" != screen* ]]; then
+    [ -r "$_tinty_sh" ] && . "$_tinty_sh"
+  fi
   unset _tinty_data _tinty_cur _tinty_sh
   alias tinty=tinty_source_shell_theme
 fi
@@ -42,7 +51,11 @@ fi
 [ -r "$HOME/.config/shell/tinty-completion.zsh" ] &&
   . "$HOME/.config/shell/tinty-completion.zsh"
 
-# prompt
+# prompt. STARSHIP_CONFIG points at the generated live config (untracked);
+# bin/starship-tinty.py writes it from the repo starship.toml template on each
+# tinty apply. Distinct filename so it is never confused with, or symlinked to,
+# the tracked template.
+export STARSHIP_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/starship.generated.toml"
 eval "$(starship init zsh)"
 
 # aliases/functions
