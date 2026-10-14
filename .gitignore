@@ -53,6 +53,7 @@ bin/*
 !bin/kiro-queue-changed.py
 !bin/kiro-open-editor.sh
 !bin/starship-tinty.py
+!bin/gnome-accent-tinty.py
 .DS_Store
 Thumbs.db
 

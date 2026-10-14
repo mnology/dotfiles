@@ -46,6 +46,7 @@ fi
 ~/.local/bin/meld-tinty.py
 ~/.local/bin/kiro-tinty.py
 ~/.local/bin/starship-tinty.py
+~/.local/bin/gnome-accent-tinty.py
 """
 
 [[items]]

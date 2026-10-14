@@ -61,9 +61,9 @@ readonly -a LINKS=(
   "${HOME}/.local/bin/kiro-tinty.py|${DOTFILES_DIR}/bin/kiro-tinty.py"
   "${HOME}/.local/bin/win-sync.py|${DOTFILES_DIR}/bin/win-sync.py"
   "${HOME}/.local/bin/starship-tinty.py|${DOTFILES_DIR}/bin/starship-tinty.py"
+  "${HOME}/.local/bin/gnome-accent-tinty.py|${DOTFILES_DIR}/bin/gnome-accent-tinty.py"
   "${HOME}/.local/bin/kiro-queue-changed.py|${DOTFILES_DIR}/bin/kiro-queue-changed.py"
   "${HOME}/.local/bin/kiro-open-editor.sh|${DOTFILES_DIR}/bin/kiro-open-editor.sh"
-  "${HOME}/.kiro/hooks/kiro-changed.json|${DOTFILES_DIR}/modern/kiro/hooks/kiro-changed.json"
   "${HOME}/.config/nvim|${DOTFILES_DIR}/nvim"
   "${HOME}/.tmux.conf|${DOTFILES_DIR}/.tmux.conf"
   "${HOME}/.tmux/status.conf|${DOTFILES_DIR}/modern/tmux/status.conf"
@@ -225,6 +225,15 @@ step_links() {
     run chmod 600 -- "${ssh_local}"
     ok "seeded ssh config.local from example (edit it with your hosts)"
   fi
+
+  # Copy, do not symlink, the global Kiro hook. The CLI does not follow a
+  # symlink when it scans ~/.kiro/hooks/, so a linked hook is silently ignored;
+  # a real file is read live. Copy on every run so repo edits propagate.
+  local kiro_hooks="${HOME}/.kiro/hooks"
+  run mkdir -p -- "${kiro_hooks}"
+  run cp -- "${DOTFILES_DIR}/modern/kiro/hooks/kiro-changed.json" \
+    "${kiro_hooks}/kiro-changed.json"
+  ok "installed global Kiro hook (copied, not linked)"
 }
 
 step_prezto() {

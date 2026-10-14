@@ -7,13 +7,6 @@ This document records how the environment is built, what provides what, and the
 differences found when the environment moved from the first Linux host to a
 Windows 11 host that runs WSL.
 
-## Hosts
-
-| Host | OS | User | Role |
-| --- | --- | --- | --- |
-| original | Linux (bare) | ejohanse | first setup |
-| typhon | Windows 11 + WSL2 (Ubuntu-26.04) | mnology | current |
-
 ## Tool sources
 
 - mise: the single source of truth for command-line tools. See
@@ -280,8 +273,10 @@ pass. The flow is pull, not push: nothing launches the editor mid-turn.
 - Global hook at `~/.kiro/hooks/kiro-changed.json` (user-level, not in any
   repo workspace), so it fires for every Kiro session regardless of workspace.
   It is tracked in the repo at `modern/kiro/hooks/kiro-changed.json` and
-  bootstrap symlinks it into `~/.kiro/hooks/`. PostFileSave and PostFileCreate
-  run `kiro-queue-changed.py`, which appends the changed path to
+  bootstrap COPIES it to `~/.kiro/hooks/` (not a symlink: the CLI does not
+  follow a symlink when it scans the hooks dir, so a linked hook is silently
+  ignored; a real file is read live, without a fresh session). PostFileSave and
+  PostFileCreate run `kiro-queue-changed.py`, which appends the changed path to
   `~/.cache/kiro/changed-files`. A Stop hook runs `kiro-open-editor.sh` at the
   end of a turn when the queue is non-empty.
 - The hook calls the scripts by their `~/.local/bin` symlinks, not the repo
@@ -299,11 +294,13 @@ Platform notes (WSL + Windows Kiro IDE):
   repo over Remote-WSL (the `open-remote-wsl` extension, backend in
   `~/.kiro-server`), so a hook command for a WSL workspace executes inside WSL,
   with WSL paths and tools. The WSL CLI and the Remote-WSL IDE share this.
-- The global hook location is confirmed for the WSL CLI (`~/.kiro/hooks/`). The
-  IDE's pickup of user-global hooks over Remote-WSL is not documented offline
-  and must be confirmed by testing in a non-dotfiles WSL workspace. If the IDE
-  does not pick up the global hook, place a copy per workspace in that repo's
-  `.kiro/hooks/`.
+- The global hook location is `~/.kiro/hooks/`, confirmed by the Kiro docs
+  (CLI V3 loads global hooks from there) and verified live: a real file placed
+  there fires in an already-running V3 session, no restart needed. Global and
+  workspace hooks run alongside each other, so a workspace copy would
+  double-fire; the repo keeps only the global copy. The IDE's pickup of a
+  user-global hook over Remote-WSL was not separately verified; test it in a
+  non-dotfiles WSL workspace if the IDE is the surface that matters.
 
 ## SSH config
 
