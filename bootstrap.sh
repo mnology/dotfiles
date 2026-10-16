@@ -225,15 +225,6 @@ step_links() {
     run chmod 600 -- "${ssh_local}"
     ok "seeded ssh config.local from example (edit it with your hosts)"
   fi
-
-  # Copy, do not symlink, the global Kiro hook. The CLI does not follow a
-  # symlink when it scans ~/.kiro/hooks/, so a linked hook is silently ignored;
-  # a real file is read live. Copy on every run so repo edits propagate.
-  local kiro_hooks="${HOME}/.kiro/hooks"
-  run mkdir -p -- "${kiro_hooks}"
-  run cp -- "${DOTFILES_DIR}/modern/kiro/hooks/kiro-changed.json" \
-    "${kiro_hooks}/kiro-changed.json"
-  ok "installed global Kiro hook (copied, not linked)"
 }
 
 step_prezto() {
@@ -264,6 +255,67 @@ step_mise() {
   fi
   run mise install --yes
   ok "mise tools installed"
+}
+
+# Install global Kiro config: steering (copied), hooks (copied, not linked —
+# the CLI ignores symlinks in ~/.kiro/hooks), and skills (restored from the
+# three upstream repos via the vercel-labs "skills" npx CLI). Needs Node
+# >=22.20.0, which mise provides; run the mise step first. Private, work-
+# specific steering is overlaid separately: see the private-steering block.
+step_kiro() {
+  log "Installing global Kiro config (steering, hooks, skills)"
+  local kiro_src="${DOTFILES_DIR}/.kiro"
+  local kiro_dst="${HOME}/.kiro"
+
+  # Steering and hooks are copied, not symlinked. Kiro reads hooks live and
+  # does not follow a symlink there; copy on every run so repo edits propagate.
+  run mkdir -p -- "${kiro_dst}/steering" "${kiro_dst}/hooks"
+  local f
+  for f in "${kiro_src}"/steering/*.md; do
+    [[ -e "${f}" ]] && run cp -- "${f}" "${kiro_dst}/steering/"
+  done
+  for f in "${kiro_src}"/hooks/*.json; do
+    [[ -e "${f}" ]] && run cp -- "${f}" "${kiro_dst}/hooks/"
+  done
+  ok "installed Kiro steering + hooks (copied, not linked)"
+
+  # Private, non-public steering overlay. Set KIRO_PRIVATE_STEERING to a dir
+  # (e.g. a clone of a private git repo's steering/) to layer work-specific
+  # steering on top of the public set. Private files win on name collision
+  # because they are copied last. Wired now, repo added later.
+  if [[ -n "${KIRO_PRIVATE_STEERING:-}" && -d "${KIRO_PRIVATE_STEERING}" ]]; then
+    for f in "${KIRO_PRIVATE_STEERING}"/*.md; do
+      [[ -e "${f}" ]] && run cp -- "${f}" "${kiro_dst}/steering/"
+    done
+    ok "overlaid private steering from ${KIRO_PRIVATE_STEERING}"
+  else
+    log "no KIRO_PRIVATE_STEERING set; skipping private overlay (optional)"
+  fi
+
+  # Skills: restore from the committed skills-lock.json's source repos. The
+  # lockfile records intent; restore uses explicit "add" per repo, which is
+  # reliable non-interactively. "experimental_install" hangs, so it is NOT
+  # used. Each add is idempotent. Pin the CLI and the kiro-cli agent target.
+  if ! command -v node >/dev/null 2>&1; then
+    warn "node not found (run the mise step first); skipping skills restore"
+    return 0
+  fi
+  local node_major
+  node_major="$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)"
+  if (( node_major < 22 )); then
+    warn "node ${node_major} < 22.20.0 required by skills CLI; skipping skills restore"
+    return 0
+  fi
+  local repo
+  local -a skill_repos=(
+    "JuliusBrussee/caveman"
+    "danyuchn/asd-ste100-skill"
+    "AminBlg/SimpleEnglish"
+  )
+  for repo in "${skill_repos[@]}"; do
+    run npx -y skills@1.7.2 add "${repo}" -a kiro-cli -g -y
+  done
+  ok "restored Kiro skills from upstream repos"
 }
 
 step_cargo() {
@@ -468,7 +520,7 @@ step_verify() {
 # --- dispatch --------------------------------------------------------------
 
 # Ordered step list and the name->function table (dispatch by data, rule 2).
-readonly -a STEP_ORDER=(check sysdeps terminal links prezto mise python cargo theme tmux fonts winsync verify)
+readonly -a STEP_ORDER=(check sysdeps terminal links prezto mise kiro python cargo theme tmux fonts winsync verify)
 declare -A STEPS=(
   [check]=step_check
   [sysdeps]=step_sysdeps
@@ -476,6 +528,7 @@ declare -A STEPS=(
   [links]=step_links
   [prezto]=step_prezto
   [mise]=step_mise
+  [kiro]=step_kiro
   [python]=step_python
   [cargo]=step_cargo
   [theme]=step_theme
@@ -501,6 +554,7 @@ Steps (default order):
   links    symlink nvim/tmux/starship/mise/shell/tinty/kitty/prezto configs
   prezto   confirm prezto modules are vendored (zsh completion/history)
   mise     install mise (if needed) and all tools from modern/mise/config.toml
+  kiro     install global Kiro steering + hooks (copied) and restore skills (npx)
   python   install requirements.in CLI tools (uv tool install) and requirements-lib.in libraries (uv pip)
   cargo    install pinned cargo tools (neovide, tinty, stylua, ...)
   theme    tinty install + apply ${THEME} (regenerates kitty/shell theme)

@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Caveman mode on at session start",
+      "trigger": "SessionStart",
+      "description": "Turn caveman voice on at the start of every session and signal the mode to the agent.",
+      "action": {
+        "type": "command",
+        "command": "printf 'Caveman mode: caveman\\nActivate the caveman skill now and reply in caveman voice for this session until the user says \"stop caveman\" or \"normal mode\".\\n'"
+      }
+    }
+  ]
+}
