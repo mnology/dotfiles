@@ -82,10 +82,11 @@ Optimize for readability, not conciseness. A comprehension or chain with more th
 - Never swallow errors silently; add context when wrapping or re-raising. Bound every I/O call with a timeout and every retry with a limit and backoff.
 - Log in a structured form (key/value or JSON), and never log secrets or personal data.
 - Comment the code's current intent, not its history. Do not leave "headstone" comments that narrate a problem the final code no longer has (a bug once hit, an approach abandoned, a workaround for a version you no longer target); version control holds the history. Comment only the non-obvious *why* that still applies, and keep the comment proportional to the change — a one-line fix does not warrant a six-line explanation.
+- Record a removal only when a future maintainer would otherwise undo it or waste time: a non-obvious reason, a security scrub, or a trap that invites the thing back. State the reason, not the fact of removal. Never leave a bare tombstone like "intentionally omitted" or "removed X" — it is noise, and for a security scrub it can re-leak what the removal meant to hide. Prefer a commit-message line over an in-file note.
 
 ## 8. Enforcement and testing
 
-- One shared, strict lint and format policy, run in pre-commit and CI. Treat warnings as errors.
+- One shared, strict lint and format policy, run in pre-commit and CI. Treat warnings as errors. Fix a warning; do not suppress it without a stated reason. Lint and check before a commit: `shellcheck` for Bash, PSScriptAnalyzer for PowerShell, `stylua` for Lua, and a headless Neovim start test for Neovim config. State what was verified and what was not.
 - Strict static typing where available.
 - Table-driven tests that mirror tables in the code. Every dispatch table gets a test asserting its key set and that every entry is callable.
 - Docstrings/doc comments on public API, with executable examples where supported.

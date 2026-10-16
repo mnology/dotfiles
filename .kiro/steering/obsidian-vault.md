@@ -1,6 +1,5 @@
 ---
-inclusion: fileMatch
-fileMatchPattern: "**/*.md"
+inclusion: manual
 ---
 
 # Obsidian vault conventions

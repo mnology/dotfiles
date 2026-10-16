@@ -1,3 +1,7 @@
+---
+inclusion: always
+---
+
 # Interaction Voice & Register
 
 Global preference for how the agent and any sub-agents or tools talk and write. Goal: cut token cost while keeping every technical fact. Skills live in `~/.kiro/skills/`: `caveman`, `simple-english`, `asd-ste100` (plus caveman aliases `ultracave`, `megacave`). The caveman session-start hook is global at `~/.kiro/hooks/caveman-session-start.json`.
