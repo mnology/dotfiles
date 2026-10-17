@@ -12,6 +12,18 @@ export PATH="$HOME/.local/bin:$PYENV_ROOT/bin:$GOENV_ROOT/bin:$HOME/.poetry/bin:
 eval "$(mise activate zsh --shims)"
 
 #
+# WSLg HiDPI (X11 / XWayland apps render tiny on a scaled 4K panel)
+#
+
+# WSLg reports the X display at 96 DPI regardless of the Windows scale. Set
+# Xft.dpi to match Windows 150% (144 = 96 * 1.5). Fires only under WSL. This
+# fixes Neovide. Obsidian (Electron) ignores Xft.dpi and uses the Chromium
+# scale flag in the obsidian() shell function instead.
+if [[ -r /proc/version && "$(</proc/version)" == *icrosoft* ]] && command -v xrdb >/dev/null 2>&1; then
+  printf 'Xft.dpi: 144\n' | xrdb -merge 2>/dev/null
+fi
+
+#
 # Browser
 #
 

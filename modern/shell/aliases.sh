@@ -33,6 +33,13 @@ else
   v() { nvim "$@"; }
 fi
 
+# obsidian: the Linux Electron build renders tiny under WSLg (reports 96 DPI on
+# a scaled 4K panel). Electron ignores Xft.dpi, so force the Chromium scale to
+# match Windows 150%. Backgrounded and detached so the terminal stays free.
+if command -v obsidian >/dev/null 2>&1; then
+  obsidian() { nohup /usr/bin/obsidian --force-device-scale-factor=1.5 "$@" >/dev/null 2>&1 & disown; }
+fi
+
 # vk: open the files the Kiro agent changed, then clear the queue. The
 # PostFileSave hook queues them; :KiroChanged opens and clears. Both vk and the
 # Stop hook call the same launcher script, so the host-aware backend choice and
