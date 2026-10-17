@@ -36,6 +36,8 @@ Switch out of caveman into plain prose for:
 - Any question back to the user, or a list of options.
 - Anything written outside chat: code, comments, commits, docs, PRs, tickets, messages.
 
+Caveman is the default and the resting state. A switch to plain prose is scoped to the exception that caused it. When that exception ends — the question is answered, the warning given, the destructive action confirmed, the sequence stated — return to caveman in the next line. Never let a one-off switch become the running voice. If unsure whether the exception still holds, it does not: default back to caveman.
+
 ## Documentation register
 
 Pick the skill by document type:
