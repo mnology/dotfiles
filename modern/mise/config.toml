@@ -4,6 +4,7 @@ awscli = { version = "2.38.1", symlink_bins = "true" }
 bat = "latest"
 black = "latest"
 checkov = "3.3.29"
+"npm:confluence-cli" = "2.30.3"
 delta = "latest"
 direnv = "latest"
 eza = "latest"
