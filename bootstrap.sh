@@ -82,6 +82,13 @@ readonly -a LINKS=(
   "${HOME}/.gitignore|${DOTFILES_DIR}/.gitignore"
   "${HOME}/.gitignore_global|${DOTFILES_DIR}/.gitignore_global"
   "${HOME}/.ssh/config|${DOTFILES_DIR}/.ssh/config"
+  # Cline reads these from ~/.cline/rules. Same sources Kiro copies in step_kiro.
+  "${HOME}/.cline/rules/engineering-style.md|${DOTFILES_DIR}/.kiro/steering/engineering-style.md"
+  "${HOME}/.cline/rules/interaction-preferences.md|${DOTFILES_DIR}/.kiro/steering/interaction-preferences.md"
+  "${HOME}/.cline/rules/interaction-voice.md|${DOTFILES_DIR}/.kiro/steering/interaction-voice.md"
+  # Obsidian vault skill: one repo copy, read by Cline and Kiro.
+  "${HOME}/.agents/skills/obsidian-vault|${DOTFILES_DIR}/agents/skills/obsidian-vault"
+  "${HOME}/.kiro/skills/obsidian-vault|${DOTFILES_DIR}/agents/skills/obsidian-vault"
 )
 
 # --- output helpers --------------------------------------------------------
@@ -284,10 +291,16 @@ step_kiro() {
   # steering on top of the public set. Private files win on name collision
   # because they are copied last. Wired now, repo added later.
   if [[ -n "${KIRO_PRIVATE_STEERING:-}" && -d "${KIRO_PRIVATE_STEERING}" ]]; then
+    # Cline reads rules from ~/.cline/rules and has no overlay of its own,
+    # so the private set goes to both agents. Copied, not linked: the source is
+    # a separate private repo that is not part of the LINKS table.
+    run mkdir -p -- "${HOME}/.cline/rules"
     for f in "${KIRO_PRIVATE_STEERING}"/*.md; do
-      [[ -e "${f}" ]] && run cp -- "${f}" "${kiro_dst}/steering/"
+      [[ -e "${f}" ]] || continue
+      run cp -- "${f}" "${kiro_dst}/steering/"
+      run cp -- "${f}" "${HOME}/.cline/rules/"
     done
-    ok "overlaid private steering from ${KIRO_PRIVATE_STEERING}"
+    ok "overlaid private steering from ${KIRO_PRIVATE_STEERING} (Kiro + Cline)"
   else
     log "no KIRO_PRIVATE_STEERING set; skipping private overlay (optional)"
   fi
@@ -295,7 +308,9 @@ step_kiro() {
   # Skills: restore from the committed skills-lock.json's source repos. The
   # lockfile records intent; restore uses explicit "add" per repo, which is
   # reliable non-interactively. "experimental_install" hangs, so it is NOT
-  # used. Each add is idempotent. Pin the CLI and the kiro-cli agent target.
+  # used. Each add is idempotent. Pin the CLI and install to both kiro-cli and cline agents
+  # so they can use the common canonical .agents/skills directory. The skills are
+  # symlinked so both agents can access them.
   if ! command -v node >/dev/null 2>&1; then
     warn "node not found (run the mise step first); skipping skills restore"
     return 0
@@ -313,9 +328,9 @@ step_kiro() {
     "AminBlg/SimpleEnglish"
   )
   for repo in "${skill_repos[@]}"; do
-    run npx -y skills@1.7.2 add "${repo}" -a kiro-cli -g -y
+    run npx -y skills@1.7.2 add "${repo}" -a kiro-cli cline -g -y
   done
-  ok "restored Kiro skills from upstream repos"
+  ok "restored skills from upstream repos (kiro-cli and cline agents)"
 }
 
 step_cargo() {

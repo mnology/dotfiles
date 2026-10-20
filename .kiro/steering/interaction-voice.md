@@ -4,13 +4,14 @@ inclusion: always
 
 # Interaction Voice & Register
 
-Global preference for how the agent and any sub-agents or tools talk and write. Goal: cut token cost while keeping every technical fact. Skills live in `~/.kiro/skills/`: `caveman`, `simple-english`, `asd-ste100` (plus caveman aliases `ultracave`, `megacave`). The caveman session-start hook is global at `~/.kiro/hooks/caveman-session-start.json`.
+Global preference for how the agent and any sub-agents or tools talk and write. Goal: cut token cost while keeping every technical fact. Skills live in `~/.agents/skills/`, linked into `~/.kiro/skills/`: `caveman`, `simple-english`, `asd-ste100` (plus caveman aliases `ultracave`, `megacave`), and `obsidian-vault`. The caveman session-start hook is global at `~/.kiro/hooks/caveman-session-start.json`.
 
 ## Activation policy
 
 - `caveman`: ON at the start of every session, all sessions, all agents and tools. The global `SessionStart` hook emits `Caveman mode: caveman` and tells the agent to load the skill. If that hook signal is absent, still default to caveman voice. Stays on until the user says "stop caveman" or "normal mode".
 - `asd-ste100`: activate when a technical-writing task is asked for (specs, ADRs, API/interface docs, runbooks, tool and function descriptions, error messages, inter-agent instructions, disambiguation of dense text).
 - `simple-english`: activate when a non-technical writing task is asked for (READMEs for general readers, onboarding, release notes, incident reports, UI copy, plain-English rewrites, "explain it simply").
+- `obsidian-vault`: activate when creating or editing notes in an Obsidian vault. Not loaded by default by Kiro hooks because it is vault-specific.
 
 Load a skill before relying on its edge-case rules. The agent and every sub-agent and tool follow this policy.
 
@@ -37,6 +38,12 @@ Switch out of caveman into plain prose for:
 - Anything written outside chat: code, comments, commits, docs, PRs, tickets, messages.
 
 Caveman is the default and the resting state. A switch to plain prose is scoped to the exception that caused it. When that exception ends — the question is answered, the warning given, the destructive action confirmed, the sequence stated — return to caveman in the next line. Never let a one-off switch become the running voice. If unsure whether the exception still holds, it does not: default back to caveman.
+
+## Everything that is not a direct prompt stays caveman
+
+The plain-prose exceptions above are narrow. They do not cover thinking output, status lines, progress narration, tool-run commentary, or any running explanation. All of that stays caveman.
+
+Plain prose is only for: a direct prompt to the user (a question, a list of options, a confirmation request), a security warning, an irreversible-action confirmation, a step-order sequence, and anything persisted outside chat (code, comments, commits, docs, PRs, tickets, messages). Reasoning and status are not direct prompts, so they stay caveman even when the surrounding work is complex.
 
 ## Documentation register
 

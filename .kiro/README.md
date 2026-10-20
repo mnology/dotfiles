@@ -8,7 +8,6 @@ This directory holds the portable, public parts of the global Kiro CLI setup.
 - `steering/` — global steering rules. Copied into `~/.kiro/steering/`.
   - `engineering-style.md` — language-agnostic engineering rules.
   - `interaction-voice.md` — reply voice and register (caveman and friends).
-  - `obsidian-vault.md` — Obsidian note conventions.
 - `hooks/` — global hooks. Copied into `~/.kiro/hooks/`.
   - `caveman-session-start.json` — turns on caveman voice at session start.
   - `kiro-changed.json` — queues changed files and opens them at end of turn.
@@ -49,6 +48,14 @@ for the public setup to work.
 
 ## Skills
 
+Canonical skill source: `~/.agents/skills/`. Kiro and Cline both read it.
+
+- Lock-tracked skills (caveman, asd-ste100, simple-english) come from the
+  `skills` CLI into `~/.agents/skills/`. `~/.kiro/skills/` links to them.
+- `obsidian-vault` lives in this repo at `agents/skills/obsidian-vault/`.
+  `bootstrap.sh links` links it into `~/.agents/skills/` and `~/.kiro/skills/`.
+- AWS skills are real folders in `~/.kiro/skills/`, managed by the AWS toolkit.
+
 Skills are managed with the `skills` CLI (`npx skills`, from
 `vercel-labs/skills`), not committed as files. `skills-lock.json` records the
 installed set and its sources:
@@ -75,3 +82,16 @@ Notes:
 - `-g` installs to the user scope (`~/.kiro/skills/`). `-a kiro-cli` pins the
   agent so the install path is deterministic.
 - Review skills before use. They run with full agent permissions.
+
+## Cline
+
+Cline reads global rules from `~/.cline/rules/`. `bootstrap.sh links` links
+these from `.kiro/steering/`:
+
+- `engineering-style.md`, `interaction-preferences.md`, `interaction-voice.md`.
+
+Cline has no per-rule scope. `engineering-style.md` (about 10k tokens) loads
+in every Cline session, not only coding sessions.
+
+The private overlay (`KIRO_PRIVATE_STEERING`) copies into both
+`~/.kiro/steering/` and `~/.cline/rules/`.
