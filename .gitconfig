@@ -81,3 +81,9 @@
 [gui]
   fontui = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
   fontdiff = -family \"Source Code Pro for Powerline\" -size 9 -weight normal -slant roman -underline 0 -overstrike 0
+[credential "https://github.com"]
+	helper = 
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !gh auth git-credential

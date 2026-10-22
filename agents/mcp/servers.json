@@ -1,0 +1,36 @@
+{
+  "$comment": "Neutral, agent-agnostic MCP server definitions. SINGLE SOURCE OF TRUTH. Add a server here and run bootstrap: it propagates to every client (Kiro, Cline, Goose). bin/gen-mcp.py merges these into each client's native config, replacing only the custom MCP servers and preserving everything else (Goose builtins, providers, etc.). Do NOT hand-edit the generated client configs. No secrets: aws-mcp authenticates via AWS SSO using the named profile below, resolved at runtime.",
+  "servers": [
+    {
+      "name": "sequential-thinking",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking@1.0.0"],
+      "env": {},
+      "timeout_ms": 60000
+    },
+    {
+      "name": "context7",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@4.4.2"],
+      "env": {},
+      "timeout_ms": 120000
+    },
+    {
+      "name": "aws-mcp",
+      "command": "uvx",
+      "args": [
+        "mcp-proxy-for-aws@latest",
+        "https://aws-mcp.us-east-1.api.aws/mcp",
+        "--metadata",
+        "INSTALL_SOURCE=aws-cli",
+        "--region",
+        "us-west-2"
+      ],
+      "env": {
+        "AWS_PROFILE": "mt-admin-access-058696575460",
+        "AWS_DEFAULT_REGION": "us-west-2"
+      },
+      "timeout_ms": 100000
+    }
+  ]
+}

@@ -89,6 +89,13 @@ readonly -a LINKS=(
   # Obsidian vault skill: one repo copy, read by Cline and Kiro.
   "${HOME}/.agents/skills/obsidian-vault|${DOTFILES_DIR}/agents/skills/obsidian-vault"
   "${HOME}/.kiro/skills/obsidian-vault|${DOTFILES_DIR}/agents/skills/obsidian-vault"
+  # Goose global steering: .goosehints + the three steering files symlinked
+  # beside it in ~/.config/goose. .goosehints uses relative @-includes, which
+  # Goose auto-injects every session (verified sonnet/haiku/qwen3-coder).
+  "${HOME}/.config/goose/.goosehints|${DOTFILES_DIR}/agents/goose/.goosehints"
+  "${HOME}/.config/goose/engineering-style.md|${DOTFILES_DIR}/.kiro/steering/engineering-style.md"
+  "${HOME}/.config/goose/interaction-voice.md|${DOTFILES_DIR}/.kiro/steering/interaction-voice.md"
+  "${HOME}/.config/goose/interaction-preferences.md|${DOTFILES_DIR}/.kiro/steering/interaction-preferences.md"
 )
 
 # --- output helpers --------------------------------------------------------
@@ -333,6 +340,23 @@ step_kiro() {
   ok "restored skills from upstream repos (kiro-cli and cline agents)"
 }
 
+step_mcp() {
+  log "Generating MCP config for all clients from agents/mcp/servers.json"
+  local gen="${DOTFILES_DIR}/bin/gen-mcp.py"
+  if [[ ! -f "${gen}" ]]; then
+    warn "gen-mcp.py not found; skipping MCP sync"
+    return 0
+  fi
+  if ! command -v python3 >/dev/null 2>&1; then
+    warn "python3 not found; skipping MCP sync"
+    return 0
+  fi
+  # PyYAML is needed only for the Goose target. Generate for the clients whose
+  # configs exist; gen-mcp skips a missing Goose config on its own.
+  run python3 "${gen}"
+  ok "MCP config generated (Kiro, Cline, Goose)"
+}
+
 step_cargo() {
   log "Installing cargo tools"
   if ! command -v cargo >/dev/null 2>&1; then
@@ -535,7 +559,7 @@ step_verify() {
 # --- dispatch --------------------------------------------------------------
 
 # Ordered step list and the name->function table (dispatch by data, rule 2).
-readonly -a STEP_ORDER=(check sysdeps terminal links prezto mise kiro python cargo theme tmux fonts winsync verify)
+readonly -a STEP_ORDER=(check sysdeps terminal links prezto mise kiro python mcp cargo theme tmux fonts winsync verify)
 declare -A STEPS=(
   [check]=step_check
   [sysdeps]=step_sysdeps
@@ -544,6 +568,7 @@ declare -A STEPS=(
   [prezto]=step_prezto
   [mise]=step_mise
   [kiro]=step_kiro
+  [mcp]=step_mcp
   [python]=step_python
   [cargo]=step_cargo
   [theme]=step_theme

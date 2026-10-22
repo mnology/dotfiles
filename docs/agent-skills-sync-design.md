@@ -1,20 +1,21 @@
-# Agent skills and steering: shared sources for Kiro and Cline
+# Agent skills, steering, and MCP: shared sources for Kiro, Cline, and Goose
 
 ## Goal
 
-One repo copy of each skill and steering rule. Kiro and Cline read the same
-files. No copies that drift.
+One repo copy of each skill, steering rule, and MCP server definition. Kiro,
+Cline, and Goose read the same sources. No copies that drift.
 
 ## Layout
 
-| Asset | Source | Kiro | Cline |
-|---|---|---|---|
-| Lock-tracked skills (caveman, asd-ste100, simple-english, and the rest of 24) | `~/.agents/skills/` (written by `skills` CLI) | `~/.kiro/skills/<name>` symlink | reads `~/.agents/skills/` |
-| `obsidian-vault` skill | `agents/skills/obsidian-vault/` in this repo | `~/.kiro/skills/obsidian-vault` symlink | `~/.agents/skills/obsidian-vault` symlink |
-| AWS skills | AWS toolkit | real folders in `~/.kiro/skills/` | not shared |
-| `engineering-style.md`, `interaction-preferences.md`, `interaction-voice.md` | `.kiro/steering/` in this repo | copied to `~/.kiro/steering/` | symlink in `~/.cline/rules/` |
-| `caveman-session-start` hook | `.kiro/hooks/` in this repo | copied to `~/.kiro/hooks/` | not applicable (Kiro-only) |
-| Private steering (`KIRO_PRIVATE_STEERING`) | separate private repo | copied to `~/.kiro/steering/` | copied to `~/.cline/rules/` |
+| Asset | Source | Kiro | Cline | Goose |
+|---|---|---|---|---|
+| Lock-tracked skills (caveman, asd-ste100, simple-english, and the rest of 24) | `~/.agents/skills/` (written by `skills` CLI) | `~/.kiro/skills/<name>` symlink | reads `~/.agents/skills/` | reads `~/.agents/skills/` |
+| `obsidian-vault` skill | `agents/skills/obsidian-vault/` in this repo | `~/.kiro/skills/obsidian-vault` symlink | `~/.agents/skills/obsidian-vault` symlink | via `~/.agents/skills/` |
+| AWS skills | AWS toolkit | real folders in `~/.kiro/skills/` | not shared | not shared |
+| `engineering-style.md`, `interaction-preferences.md`, `interaction-voice.md` | `.kiro/steering/` in this repo | copied to `~/.kiro/steering/` | symlink in `~/.cline/rules/` | symlink in `~/.config/goose/`, auto-injected via `.goosehints` relative `@`-includes |
+| MCP servers (aws-mcp, context7, sequential-thinking) | `agents/mcp/servers.json` in this repo | `mcpServers` in `~/.kiro/settings/mcp.json` (generated) | `mcpServers` in `~/.cline/data/settings/cline_mcp_settings.json` (generated) | `type: stdio` entries in `~/.config/goose/config.yaml` `extensions` (generated, builtins preserved) |
+| `caveman-session-start` hook | `.kiro/hooks/` in this repo | copied to `~/.kiro/hooks/` | not applicable (Kiro-only) | not applicable |
+| Private steering (`KIRO_PRIVATE_STEERING`) | separate private repo | copied to `~/.kiro/steering/` | copied to `~/.cline/rules/` | not yet wired |
 
 ## Why each mechanism
 
@@ -28,6 +29,20 @@ files. No copies that drift.
 - **Obsidian is a skill, not a rule.** Cline ignores `inclusion: manual`, and
   Cline rules have no scope. As a skill, the agent loads it by its
   description, or the user types `/obsidian-vault` in Kiro.
+- **Goose steering uses relative `@`-includes.** `~/.config/goose/.goosehints`
+  holds `@engineering-style.md` etc.; the three files are symlinked beside it in
+  `~/.config/goose/`. Goose auto-injects relative `@`-includes at session start,
+  deterministically, before the model runs — verified across sonnet, haiku, and
+  qwen3-coder. Absolute `@`-paths do NOT auto-inject (they degrade to a plain
+  "go read it" hint only strong models honour), so paths must be relative and
+  the targets must live beside the hints file.
+- **MCP is generated from one neutral source.** `agents/mcp/servers.json` is the
+  single authority. `bin/gen-mcp.py` writes each client's native format: it
+  replaces the custom MCP set and preserves everything else (Goose's `platform`
+  builtins, its providers block, Kiro/Cline non-MCP keys). Add a server to the
+  source, run bootstrap, and it propagates to every client. No secrets are
+  written: aws-mcp carries only the AWS profile name and authenticates via SSO
+  at runtime.
 
 ## Trade-offs
 

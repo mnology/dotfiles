@@ -9,3 +9,4 @@ Markdown
 packaging>=23.2,<24
 tree-sitter
 pyyaml
+types-PyYAML
