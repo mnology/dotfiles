@@ -11,6 +11,7 @@ Cline, and Goose read the same sources. No copies that drift.
 |---|---|---|---|---|
 | Lock-tracked skills (caveman, asd-ste100, simple-english, and the rest of 24) | `~/.agents/skills/` (written by `skills` CLI) | `~/.kiro/skills/<name>` symlink | reads `~/.agents/skills/` | reads `~/.agents/skills/` |
 | `obsidian-vault` skill | `agents/skills/obsidian-vault/` in this repo | `~/.kiro/skills/obsidian-vault` symlink | `~/.agents/skills/obsidian-vault` symlink | via `~/.agents/skills/` |
+| `engineering-style` skill | `agents/skills/engineering-style/` in this repo | `~/.kiro/skills/engineering-style` symlink | `~/.agents/skills/engineering-style` symlink | via `~/.agents/skills/` |
 | AWS skills | AWS toolkit | real folders in `~/.kiro/skills/` | not shared | not shared |
 | `engineering-style.md`, `interaction-preferences.md`, `interaction-voice.md` | `.kiro/steering/` in this repo | copied to `~/.kiro/steering/` | symlink in `~/.cline/rules/` | symlink in `~/.config/goose/`, auto-injected via `.goosehints` relative `@`-includes |
 | MCP servers (aws-mcp, context7, sequential-thinking) | `agents/mcp/servers.json` in this repo | `mcpServers` in `~/.kiro/settings/mcp.json` (generated) | `mcpServers` in `~/.cline/data/settings/cline_mcp_settings.json` (generated) | `type: stdio` entries in `~/.config/goose/config.yaml` `extensions` (generated, builtins preserved) |
@@ -46,9 +47,14 @@ Cline, and Goose read the same sources. No copies that drift.
 
 ## Trade-offs
 
-- `engineering-style.md` loads in every Cline session, about 10k tokens per
-  turn. It is meant for coding, infra, and tool work. Cline has no per-rule
-  scope to limit it.
+- `engineering-style` is a skill (loaded on demand), not an always-on rule. The
+  always-on steering stub (`engineering-style.md`, ~1k tokens) points to it and
+  keeps only the safety floor (supply chain, secrets, memory safety, AI-agent
+  gates) inline. This removed the old ~10k-token-per-session cost of carrying
+  the full ruleset always-on. Risk: the agent must trigger the skill by its
+  description for the full detail to load; the safety floor is present either
+  way. Cline has no per-rule scope, so Cline gets the stub always-on and loads
+  the skill by description like the other skills.
 - The Kiro `SessionStart` caveman hook does not run in Cline. The voice rule
   still says to default to caveman when the hook signal is absent.
 - Kiro skill loading through a symlink is not yet verified (see Verification).

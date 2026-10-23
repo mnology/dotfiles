@@ -6,7 +6,7 @@ This directory holds the portable, public parts of the global Kiro CLI setup.
 ## Contents
 
 - `steering/` — global steering rules. Copied into `~/.kiro/steering/`.
-  - `engineering-style.md` — language-agnostic engineering rules.
+  - `engineering-style.md` — thin stub: pointer to the `engineering-style` skill plus the always-on safety floor.
   - `interaction-voice.md` — reply voice and register (caveman and friends).
 - `hooks/` — global hooks. Copied into `~/.kiro/hooks/`.
   - `caveman-session-start.json` — turns on caveman voice at session start.
@@ -90,8 +90,10 @@ these from `.kiro/steering/`:
 
 - `engineering-style.md`, `interaction-preferences.md`, `interaction-voice.md`.
 
-Cline has no per-rule scope. `engineering-style.md` (about 10k tokens) loads
-in every Cline session, not only coding sessions.
+Cline has no per-rule scope. `engineering-style.md` is now a thin always-on
+stub (pointer + safety floor, ~1k tokens); the full ruleset moved to the
+`engineering-style` skill, loaded on demand. This removed the old ~10k-token
+always-on cost in every Cline session.
 
 The private overlay (`KIRO_PRIVATE_STEERING`) copies into both
 `~/.kiro/steering/` and `~/.cline/rules/`.

@@ -89,6 +89,10 @@ readonly -a LINKS=(
   # Obsidian vault skill: one repo copy, read by Cline and Kiro.
   "${HOME}/.agents/skills/obsidian-vault|${DOTFILES_DIR}/agents/skills/obsidian-vault"
   "${HOME}/.kiro/skills/obsidian-vault|${DOTFILES_DIR}/agents/skills/obsidian-vault"
+  # Engineering-style skill: full ruleset loaded on demand. The always-on
+  # steering stub (engineering-style.md, linked above) points here.
+  "${HOME}/.agents/skills/engineering-style|${DOTFILES_DIR}/agents/skills/engineering-style"
+  "${HOME}/.kiro/skills/engineering-style|${DOTFILES_DIR}/agents/skills/engineering-style"
   # Goose global steering: .goosehints + the three steering files symlinked
   # beside it in ~/.config/goose. .goosehints uses relative @-includes, which
   # Goose auto-injects every session (verified sonnet/haiku/qwen3-coder).
