@@ -45,3 +45,20 @@ fi
 # Stop hook call the same launcher script, so the host-aware backend choice and
 # the neovide `--` arg-forwarding quirk live in one place.
 vk() { "$HOME/devel/personal/dotfiles/bin/kiro-open-editor.sh"; }
+
+# kiro-personal / kp: run Kiro CLI under a separate auth identity.
+#
+# Kiro stores its auth token in $XDG_DATA_HOME/kiro-cli/data.sqlite3. A second
+# XDG_DATA_HOME is the only lever that persists a second, independent login, so
+# the personal data dir exists solely to hold that separate auth store.
+#
+# XDG_DATA_HOME is a general var every child reads, so the override would leak
+# into hooks, mise, neovide, and nvim and fork their state. To stop that, we
+# save the parent value in _KIRO_PARENT_XDG_DATA_HOME; kiro-open-editor.sh (and
+# any GUI-spawning hook) restores it so spawned tools use the real, shared dir.
+kiro-personal() {
+  _KIRO_PARENT_XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}" \
+  XDG_DATA_HOME="$HOME/devel/personal/.kiro-personal/data" \
+    kiro-cli "$@"
+}
+kp() { kiro-personal --tui --v3; }
