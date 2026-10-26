@@ -54,6 +54,8 @@ bin/*
 !bin/kiro-open-editor.sh
 !bin/starship-tinty.py
 !bin/gnome-accent-tinty.py
+!bin/wallpaper-tinty.py
+!bin/wallpaper-tinty-watch.sh
 !bin/gen-mcp.py
 .DS_Store
 Thumbs.db

@@ -62,6 +62,8 @@ readonly -a LINKS=(
   "${HOME}/.local/bin/win-sync.py|${DOTFILES_DIR}/bin/win-sync.py"
   "${HOME}/.local/bin/starship-tinty.py|${DOTFILES_DIR}/bin/starship-tinty.py"
   "${HOME}/.local/bin/gnome-accent-tinty.py|${DOTFILES_DIR}/bin/gnome-accent-tinty.py"
+  "${HOME}/.local/bin/wallpaper-tinty.py|${DOTFILES_DIR}/bin/wallpaper-tinty.py"
+  "${HOME}/.local/bin/wallpaper-tinty-watch.sh|${DOTFILES_DIR}/bin/wallpaper-tinty-watch.sh"
   "${HOME}/.local/bin/kiro-queue-changed.py|${DOTFILES_DIR}/bin/kiro-queue-changed.py"
   "${HOME}/.local/bin/kiro-open-editor.sh|${DOTFILES_DIR}/bin/kiro-open-editor.sh"
   "${HOME}/.config/nvim|${DOTFILES_DIR}/nvim"
@@ -358,7 +360,7 @@ step_mcp() {
   # PyYAML is needed only for the Goose target. Generate for the clients whose
   # configs exist; gen-mcp skips a missing Goose config on its own.
   run python3 "${gen}"
-  ok "MCP config generated (Kiro, Cline, Goose)"
+  ok "MCP config generated (Kiro, Cline, Goose, Duo)"
 }
 
 step_cargo() {
@@ -486,6 +488,37 @@ step_theme() {
   ok "theme applied; completions generated; kitty/shell artifacts regenerated"
 }
 
+# Install and enable the event-driven wallpaper -> scheme service. On a GNOME
+# wallpaper or color-scheme change, systemd runs wallpaper-tinty, which (in
+# auto mode) builds and applies a base24 scheme from the current wallpaper. A
+# manual `tinty apply` flips it to manual mode (model b); `wallpaper-tinty
+# auto` resumes. Linux/GNOME only; needs the bin symlinks from step_links.
+step_wallpaper() {
+  log "Installing the wallpaper-driven theme service (GNOME)"
+  if [[ "$(uname -s)" != "Linux" ]] || ! command -v gsettings >/dev/null 2>&1; then
+    warn "not a GNOME/gsettings host; skipping wallpaper service"
+    return 0
+  fi
+  if ! command -v systemctl >/dev/null 2>&1; then
+    warn "systemd not available; skipping wallpaper service"
+    return 0
+  fi
+  local unit_dir="${HOME}/.config/systemd/user"
+  run mkdir -p -- "${unit_dir}"
+  # Copy, not symlink: systemd --user reads unit files from disk and a stale
+  # symlink target after a repo move would silently disable the unit.
+  run cp -- "${DOTFILES_DIR}/modern/systemd/wallpaper-tinty.service" \
+    "${unit_dir}/wallpaper-tinty.service"
+  if [[ "${DRY_RUN}" == "1" ]]; then
+    printf '    [dry-run] systemctl --user daemon-reload\n'
+    printf '    [dry-run] systemctl --user enable --now wallpaper-tinty.service\n'
+  else
+    systemctl --user daemon-reload
+    systemctl --user enable --now wallpaper-tinty.service
+  fi
+  ok "wallpaper-tinty service installed and enabled (auto mode)"
+}
+
 # Install tmux plugin manager so the tinted-tmux status theme can load.
 step_tmux() {
   log "Setting up tmux plugin manager (tpm)"
@@ -563,7 +596,7 @@ step_verify() {
 # --- dispatch --------------------------------------------------------------
 
 # Ordered step list and the name->function table (dispatch by data, rule 2).
-readonly -a STEP_ORDER=(check sysdeps terminal links prezto mise kiro python mcp cargo theme tmux fonts winsync verify)
+readonly -a STEP_ORDER=(check sysdeps terminal links prezto mise kiro python mcp cargo theme wallpaper tmux fonts winsync verify)
 declare -A STEPS=(
   [check]=step_check
   [sysdeps]=step_sysdeps
@@ -576,6 +609,7 @@ declare -A STEPS=(
   [python]=step_python
   [cargo]=step_cargo
   [theme]=step_theme
+  [wallpaper]=step_wallpaper
   [tmux]=step_tmux
   [fonts]=step_fonts
   [winsync]=step_winsync
@@ -602,6 +636,7 @@ Steps (default order):
   python   install requirements.in CLI tools (uv tool install) and requirements-lib.in libraries (uv pip)
   cargo    install pinned cargo tools (neovide, tinty, stylua, ...)
   theme    tinty install + apply ${THEME} (regenerates kitty/shell theme)
+  wallpaper install the event-driven wallpaper -> scheme service (GNOME)
   tmux     install tpm (tmux plugin manager)
   fonts    install the vendored FiraCode Nerd Font (Linux/WSL/macOS)
   winsync  copy repo files to their Windows paths (WSL only; win-sync push)

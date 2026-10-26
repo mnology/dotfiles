@@ -1,0 +1,22 @@
+[Unit]
+Description=Re-derive the tinty scheme when the GNOME wallpaper or color-scheme changes
+Documentation=file:%h/devel/dotfiles/bin/wallpaper-tinty.py
+# Needs the GNOME session: gsettings/dconf and the D-Bus session bus.
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+# Event-driven, not polling. `gsettings monitor` blocks on the dconf D-Bus
+# signal and prints one line per change. Each line triggers one short-lived
+# run of wallpaper-tinty, which respects auto/manual mode itself. The monitor
+# is the only resident process; the worker exits after each change.
+ExecStart=%h/.local/bin/wallpaper-tinty-watch.sh
+Restart=on-failure
+RestartSec=5
+# Keep it cheap and contained.
+Nice=10
+IOSchedulingClass=idle
+
+[Install]
+WantedBy=graphical-session.target
