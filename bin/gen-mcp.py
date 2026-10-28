@@ -13,6 +13,10 @@ servers. Per client:
   - Goose (~/.config/goose/config.yaml)              : within `extensions`,
     replace only `type: stdio` entries; preserve `type: platform`/`builtin`
     and every non-extension key (providers, active_provider, ...).
+  - Duo   (~/.gitlab/duo/mcp.json)                   : replace `mcpServers`,
+    keep any other top-level keys. Emits only documented keys (type, command,
+    args, env). `approvedTools` is deliberately omitted so Duo prompts for
+    approval of every tool call. Honors GLAB_CONFIG_DIR / XDG_CONFIG_HOME.
 
 No secrets are written: aws-mcp carries only the AWS profile name in env and
 authenticates via SSO at runtime.
@@ -23,6 +27,7 @@ Idempotent. Safe to run repeatedly. Tolerant of Goose rewriting its own file.
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, NoReturn
@@ -39,6 +44,18 @@ SOURCE = DOTFILES / "agents" / "mcp" / "servers.json"
 KIRO_CFG = HOME / ".kiro" / "settings" / "mcp.json"
 CLINE_CFG = HOME / ".cline" / "data" / "settings" / "cline_mcp_settings.json"
 GOOSE_CFG = HOME / ".config" / "goose" / "config.yaml"
+
+
+def duo_cfg_path() -> Path:
+    """GitLab Duo user MCP config, honoring the documented env overrides."""
+    if os.environ.get("GLAB_CONFIG_DIR"):
+        return Path(os.environ["GLAB_CONFIG_DIR"]) / "duo" / "mcp.json"
+    if os.environ.get("XDG_CONFIG_HOME"):
+        return Path(os.environ["XDG_CONFIG_HOME"]) / "gitlab" / "duo" / "mcp.json"
+    return HOME / ".gitlab" / "duo" / "mcp.json"
+
+
+DUO_CFG = duo_cfg_path()
 
 
 def die(msg: str) -> NoReturn:
@@ -79,6 +96,24 @@ def to_mcpservers_shape(servers: list[dict[str, Any]]) -> dict[str, Any]:
     return out
 
 
+def to_duo_shape(servers: list[dict[str, Any]]) -> dict[str, Any]:
+    """GitLab Duo native shape: `mcpServers` with documented stdio keys only.
+
+    No `approvedTools` (Duo prompts per tool), no timeout (not documented).
+    """
+    out: dict[str, Any] = {}
+    for s in servers:
+        entry: dict[str, Any] = {
+            "type": "stdio",
+            "command": s["command"],
+            "args": list(s["args"]),
+        }
+        if s.get("env"):
+            entry["env"] = dict(s["env"])
+        out[s["name"]] = entry
+    return out
+
+
 def to_goose_stdio(servers: list[dict[str, Any]]) -> dict[str, Any]:
     """Goose native shape: `extensions` entries of type stdio.
 
@@ -101,12 +136,17 @@ def to_goose_stdio(servers: list[dict[str, Any]]) -> dict[str, Any]:
     return out
 
 
-def write_json_client(path: Path, servers: list[dict[str, Any]], label: str) -> None:
+def write_json_client(
+    path: Path,
+    servers: list[dict[str, Any]],
+    label: str,
+    shape: Any = to_mcpservers_shape,
+) -> None:
     """Replace `mcpServers`, preserve other top-level keys. Create if absent."""
     doc: dict[str, Any] = {}
     if path.is_file():
         doc = json.loads(path.read_text())
-    doc["mcpServers"] = to_mcpservers_shape(servers)
+    doc["mcpServers"] = shape(servers)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(doc, indent=2) + "\n")
     print(f"gen-mcp: wrote {label}: {path}")
@@ -141,6 +181,7 @@ CLIENTS = {
     "kiro": lambda servers: write_json_client(KIRO_CFG, servers, "Kiro"),
     "cline": lambda servers: write_json_client(CLINE_CFG, servers, "Cline"),
     "goose": lambda servers: write_goose(GOOSE_CFG, servers),
+    "duo": lambda servers: write_json_client(DUO_CFG, servers, "Duo", to_duo_shape),
 }
 
 

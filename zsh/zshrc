@@ -70,3 +70,5 @@ export LS_COLORS="$(vivid generate ansi)"
 export BAT_THEME="base16-256"
 export MANPAGER="sh -c 'col -bx | bat --language=man --plain --paging=always'"
 export MANROFFOPT="-c"
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
