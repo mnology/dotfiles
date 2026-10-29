@@ -61,6 +61,13 @@ Rules for every install step:
 
 ## Interaction defaults
 
+- Never assume the date or carry one from earlier context. Whenever a prompt
+  touches time at all - "now", "today", "tomorrow", "yesterday", "this week",
+  a day name, a deadline, scheduling, "latest", "current", relative ages, or
+  any date arithmetic - first inspect the real date with the `date` utility
+  (for example `date "+%Y-%m-%d %A %Z"`) or an equivalent means, and reason
+  from that. Re-inspect for each such prompt; do not reuse an earlier reading
+  if the session may have crossed a day boundary.
 - Be honest about what is verified against what is assumed.
 - Read a file before you change it.
 - Prefer package managers over manual steps.

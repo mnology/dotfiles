@@ -330,7 +330,7 @@ step_kiro() {
   fi
   local node_major
   node_major="$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)"
-  if (( node_major < 22 )); then
+  if ((node_major < 22)); then
     warn "node ${node_major} < 22.20.0 required by skills CLI; skipping skills restore"
     return 0
   fi
@@ -339,6 +339,9 @@ step_kiro() {
     "JuliusBrussee/caveman"
     "danyuchn/asd-ste100-skill"
     "AminBlg/SimpleEnglish"
+    "anthropics/skills@internal-comms"
+    "desplega-ai/ai-toolbox"
+    "wdavidturner/product-skills"
   )
   for repo in "${skill_repos[@]}"; do
     run npx -y skills@1.7.2 add "${repo}" -a kiro-cli cline -g -y
